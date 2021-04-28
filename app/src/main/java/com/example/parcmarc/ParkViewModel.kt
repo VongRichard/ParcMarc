@@ -1,11 +1,12 @@
 package com.example.parcmarc
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 
 class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
+    val parks: LiveData<List<Park>> = parkRepository.parks.asLiveData()
+    val numParks: LiveData<Int> = parkRepository.numParks.asLiveData()
+
     fun addPark(park: Park) = viewModelScope.launch {
         parkRepository.insert(park)
     }

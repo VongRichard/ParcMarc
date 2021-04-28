@@ -1,9 +1,7 @@
 package com.example.parcmarc
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Update
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ParkDao {
@@ -15,4 +13,10 @@ interface ParkDao {
 
     @Delete
     suspend fun delete(park: Park)
+
+    @Query("SELECT * FROM park")
+    fun getAll(): Flow<List<Park>>
+
+    @Query("SELECT COUNT(*) FROM park")
+    fun getCount(): Flow<Int>
 }

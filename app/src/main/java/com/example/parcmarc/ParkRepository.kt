@@ -1,8 +1,12 @@
 package com.example.parcmarc
 
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.flow.Flow
 
 class ParkRepository(private val parkDao: ParkDao) {
+    val parks: Flow<List<Park>> = parkDao.getAll()
+    val numParks: Flow<Int> = parkDao.getCount()
+
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(park: Park) {

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "friend")
+@Entity(tableName = "park")
 class Park (
         @ColumnInfo var name: String,
         @ColumnInfo var latitude: Float,
