@@ -9,5 +9,14 @@
         android:id="@+id/allParksFragment"
         android:name="com.example.parcmarc.AllParksFragment"
         android:label="fragment_all_parks"
-        tools:layout="@layout/fragment_all_parks" />
+        tools:layout="@layout/fragment_all_parks" >
+        <action
+            android:id="@+id/action_allParksFragment_to_parkFragment"
+            app:destination="@id/parkFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/parkFragment"
+        android:name="com.example.parcmarc.ParkFragment"
+        android:label="fragment_park"
+        tools:layout="@layout/fragment_park" />
 </navigation>

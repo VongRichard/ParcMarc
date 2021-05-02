@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
@@ -37,6 +39,8 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
     }
 
     override fun onParkClick(position: Int) {
-        println(position);
+        val park = viewModel.parks.value!![position]
+        val navigationController = this.findNavController()
+        navigationController.navigate(R.id.action_allParksFragment_to_parkFragment)
     }
 }
