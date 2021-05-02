@@ -2,4 +2,9 @@
     <string name="app_name">Parc Marc</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="remaining">remaining</string>
+    <string name="default_park_name">Park Name</string>
+    <string name="default_time_remaining">0:00</string>
+    <string name="park_image_description">Park Image</string>
+    <string name="add_button_description">Add button</string>
 </resources>
