@@ -18,18 +18,13 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 
-class MainActivity : PermittedActivity(), OnMapReadyCallback {
-    private lateinit var map: GoogleMap
-    private val hasLocationPermissions
+class MainActivity : PermittedActivity() {
+    val hasLocationPermissions
         get() = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // TODO Figure out what to do with this
-//        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
 
         val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         requestPermissions(permissions, 100, {
@@ -53,38 +48,25 @@ class MainActivity : PermittedActivity(), OnMapReadyCallback {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-
-        map.setOnMapLongClickListener {
-            // TODO Open in Google Maps?
-        }
-
-        if (hasLocationPermissions) {
-            map.isMyLocationEnabled = true
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun queryLocationForUnlock() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val listener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                // TODO Do something with the Location
-
-                locationManager.removeUpdates(this)
-            }
-
-            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        }
-
-        if (hasLocationPermissions) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
-        }
-    }
+//    @SuppressLint("MissingPermission")
+//    private fun queryLocationForUnlock() {
+//        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//
+//        val listener = object : LocationListener {
+//            override fun onLocationChanged(location: Location) {
+//                // TODO Do something with the Location
+//
+//                locationManager.removeUpdates(this)
+//            }
+//
+//            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
+//            override fun onProviderEnabled(provider: String) {}
+//            override fun onProviderDisabled(provider: String) {}
+//        }
+//
+//        if (hasLocationPermissions) {
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
+//        }
+//    }
 
 }

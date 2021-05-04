@@ -1,17 +1,23 @@
 package com.example.parcmarc
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
-
     private val viewModel: ParkViewModel by activityViewModels() {
         ParkViewModelFactory((activity?.application as ParcMarcApplication).repository)
     }
@@ -29,8 +35,9 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         // Uncomment to quickly add test data
-//        for (i in 0..20) {
-//            viewModel.addPark(Park("Disney World", 0.1, 0.2))
+//        for (i in 0..1) {
+//            val latLng = LatLng(0.1, 0.2)
+//            viewModel.addPark(Park("Disney World", latLng))
 //        }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)

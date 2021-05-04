@@ -18,5 +18,9 @@
         android:id="@+id/parkFragment"
         android:name="com.example.parcmarc.ParkFragment"
         android:label="fragment_park"
-        tools:layout="@layout/fragment_park" />
+        tools:layout="@layout/fragment_park" >
+        <argument
+            android:name="park"
+            app:argType="com.example.parcmarc.Park" />
+    </fragment>
 </navigation>

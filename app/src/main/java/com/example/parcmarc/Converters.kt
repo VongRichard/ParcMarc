@@ -8,7 +8,7 @@ class Converters {
     @TypeConverter
     fun stringToLatLng(value: String): LatLng {
         val valueSplit = value.split(",")
-        return LatLng(valueSplit[0].toDouble(), valueSplit[2].toDouble())
+        return LatLng(valueSplit[0].toDouble(), valueSplit[1].toDouble())
     }
 
     @TypeConverter
