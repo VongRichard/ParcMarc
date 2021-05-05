@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_allParksFragment_to_parkFragment"
             app:destination="@id/parkFragment" />
+        <action
+            android:id="@+id/action_allParksFragment_to_createNewParkLocation"
+            app:destination="@id/createNewParkLocation" />
     </fragment>
     <fragment
         android:id="@+id/parkFragment"
         android:name="com.example.parcmarc.ParkFragment"
         android:label="fragment_park"
         tools:layout="@layout/fragment_park" />
+    <fragment
+        android:id="@+id/createNewParkLocation"
+        android:name="com.example.parcmarc.CreateNewParkFragment"
+        android:label="fragment_create_new_park_location"
+        tools:layout="@layout/fragment_create_new_park" />
 </navigation>

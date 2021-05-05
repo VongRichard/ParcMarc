@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
@@ -28,10 +30,15 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
             parkAdapter.setData(newParks)
         })
 
-        // Uncomment to quickly add test data
+//         Uncomment to quickly add test data
 //        for (i in 0..20) {
 //            viewModel.addPark(Park("Disney World", 0.1, 0.2))
 //        }
+
+        view.findViewById<FloatingActionButton>(R.id.floatingActionButton2)?.setOnClickListener {
+            println("do da")
+            findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)
+        }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.adapter = parkAdapter
