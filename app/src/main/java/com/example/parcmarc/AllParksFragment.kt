@@ -1,15 +1,22 @@
 package com.example.parcmarc
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.PermissionChecker.checkSelfPermission
 import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
@@ -30,12 +37,13 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
             parkAdapter.setData(newParks)
         })
 
-//         Uncomment to quickly add test data
-//        for (i in 0..20) {
-//            viewModel.addPark(Park("Disney World", 0.1, 0.2))
+        // Uncomment to quickly add test data
+//        for (i in 0..1) {
+//            val latLng = LatLng(0.1, 0.2)
+//            viewModel.addPark(Park("Disney World", latLng))
 //        }
 
-        view.findViewById<FloatingActionButton>(R.id.floatingActionButton2)?.setOnClickListener {
+        view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
             println("do da")
             findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)
         }
