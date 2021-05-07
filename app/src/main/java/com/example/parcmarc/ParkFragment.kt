@@ -6,14 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.navArgs
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.MarkerOptions
 
 class ParkFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
+    private val args: ParkFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +26,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.title = args.park.name
 
         mapView = requireView().findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState);
@@ -34,6 +36,12 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.addMarker(
+            MarkerOptions()
+                .position(args.park.location)
+                .title("Location")
+        )
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(args.park.location, 15F))
 
         map.setOnMapLongClickListener {
             // TODO Open in Google Maps?

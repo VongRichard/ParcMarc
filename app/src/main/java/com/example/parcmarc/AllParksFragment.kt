@@ -35,8 +35,8 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         // Uncomment to quickly add test data
-//        for (i in 0..1) {
-//            val latLng = LatLng(0.1, 0.2)
+//        for (i in 0..0) {
+//            val latLng = LatLng(-43.507711, 172.562425)
 //            viewModel.addPark(Park("Disney World", latLng))
 //        }
 
@@ -47,7 +47,8 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
     override fun onParkClick(position: Int) {
         val park = viewModel.parks.value!![position]
+        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(park)
         val navigationController = this.findNavController()
-        navigationController.navigate(R.id.action_allParksFragment_to_parkFragment)
+        navigationController.navigate(action)
     }
 }
