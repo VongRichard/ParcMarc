@@ -1,11 +1,14 @@
 package com.example.parcmarc
 
 import android.annotation.SuppressLint
+import android.graphics.Matrix
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.*
@@ -15,6 +18,10 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
     private val args: ParkFragmentArgs by navArgs()
+
+    fun onImageViewClick(imageView: ImageView) {
+        //TODO navigate to ImageFragment
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +38,13 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         mapView = requireView().findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this)
+
+        val imageView1 = requireView().findViewById<ImageView>(R.id.park_image_1)
+        imageView1.setOnClickListener { onImageViewClick(imageView1) }
+        val imageView2 = requireView().findViewById<ImageView>(R.id.park_image_2)
+        imageView2.setOnClickListener { onImageViewClick(imageView2) }
+        val imageView3 = requireView().findViewById<ImageView>(R.id.park_image_3)
+        imageView3.setOnClickListener { onImageViewClick(imageView3) }
     }
 
     @SuppressLint("MissingPermission")

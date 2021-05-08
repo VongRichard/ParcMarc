@@ -45,7 +45,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/park_image_2"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/first_image_desc"
+        android:adjustViewBounds="true"/>
 
     <ImageView
         android:id="@+id/park_image_2"
@@ -55,7 +57,9 @@
         app:layout_constraintEnd_toStartOf="@+id/park_image_3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/park_image_1"
-        app:layout_constraintTop_toTopOf="@+id/park_image_1" />
+        app:layout_constraintTop_toTopOf="@+id/park_image_1"
+        android:contentDescription="@string/second_image_desc"
+        android:adjustViewBounds="true"/>
 
     <ImageView
         android:id="@+id/park_image_3"
@@ -65,5 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/park_image_2"
-        app:layout_constraintTop_toTopOf="@+id/park_image_2" />
+        app:layout_constraintTop_toTopOf="@+id/park_image_2"
+        android:contentDescription="@string/third_image_desc"
+        android:adjustViewBounds="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
