@@ -9,29 +9,39 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.MediaStore
+import android.text.InputType
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
-import nz.ac.canterbury.seng440.backlog.PermittedFragment
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
+import java.util.*
 
 private const val REQUEST_CAMERA = 110
 private const val REQUEST_GALLERY = 111
 
-class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetListener {
+class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private val viewModel: ParkViewModel by activityViewModels() {
         ParkViewModelFactory((activity?.application as ParcMarcApplication).repository)
     }
+
     private var locationValue: TextView? = view?.findViewById(R.id.locationValue)
     private var nameValue: EditText? = view?.findViewById(R.id.editTextName)
-    private var timeValue: EditText? = view?.findViewById(R.id.editTextTime)
+    private var timeValue: TextView? = view?.findViewById(R.id.timeLimitValue)
     private lateinit var prefs: SharedPreferences
+    private lateinit var imagesLayout: LinearLayout
 
 
     private val photoDirectory
@@ -40,12 +50,8 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val permissions = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        requestPermissions(permissions, 100, {
-//            promptForTodo()
-        }, {
-            Toast.makeText(requireContext(), "Unable to store photos.", Toast.LENGTH_LONG).show()
-        })
+        prefs = PreferenceManager.getDefaultSharedPreferences(context)
+//        updateImageViews()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +63,38 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
             promptForAdd()
         }
 
+        imagesLayout = view.findViewById(R.id.imagesLayout)
+
+        timeValue?.setOnClickListener {
+            println("doo daa")
+            setFinalTime()
+        }
+
         return view
+    }
+    private fun updateImageViews() {
+        imagesLayout.removeAllViews()
+
+        val photos: Array<File>? =  photoDirectory
+                .listFiles { file, _ -> file.isDirectory }
+        if (!photos.isNullOrEmpty()) {
+            for (photo in photos) {
+                addImageView(photo)
+            }
+        }
+
+    }
+
+    private fun addImageView(image: File) {
+        val imageView = ImageView(context)
+        val bitmap = BitmapFactory.decodeFile(image.absolutePath)
+        imageView.setImageBitmap(bitmap)
+        val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                120, 120)
+        imageView.layoutParams = layoutParams
+        imageView.tag = "${image.nameWithoutExtension}View"
+        imagesLayout.addView(imageView)
     }
 
     private fun addNewPark() {
@@ -70,6 +107,14 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
 //            emailBox.text.toString()
 //        )
 //        viewModel.addFriend(newFriend)
+    }
+
+    private fun setFinalTime() {
+        val fragment = TimePickerFragment()
+        fragment.listener = this
+        fragment.hour = prefs.getInt("hour", 6)
+        fragment.minute = prefs.getInt("minute", 0)
+        activity?.let { fragment.show(it.supportFragmentManager, null) }
     }
 
     override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
@@ -95,20 +140,11 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
         builder.show()
     }
 
-//    private fun loadDayPhotos() {
-//        if (photoDirectory.exists()) {
-//            val photos = photoDirectory
-//                .listFiles { file, _ -> file.isDirectory }
-//                .map{ Photo(File(it, String.format("%02d_%02d.jpg", month, day))) }
-//                .filter { it.file.exists() }
-//
-//            photosList.adapter = PhotoAdapter(photos)
-//        }
-//    }
 
-    // Exercise 2
-    private fun dayFile(year: Int, month: Int, day: Int): File {
-        val file = File(photoDirectory, String.format("$year/%02d_%02d.jpg", month, day))
+    private fun dayFile(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int): File {
+
+        val file = File(photoDirectory, String.format("%02d_%02d_%02d_%02d_%02d_%02d.jpg",
+                                        year, month, day, hour, minute, second))
         file.parentFile.mkdirs()
         return file
     }
@@ -116,23 +152,17 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
     // Exercise 3 - FileProvider XML
 
     // Exercise 4
-    private fun dayUri(year: Int, month: Int, day: Int): Uri {
-        val file = dayFile(year, month, day)
-        val uri = FileProvider.getUriForFile(requireContext(), "nz.ac.canterbury.seng440.backlog.fileprovider", file)
+    private fun dayUri(date: Date): Uri {
+        val file = dayFile(date.year, date.month, date.day, date.hours, date.minutes, date.seconds)
+        val uri = FileProvider.getUriForFile(requireContext(), "com.example.parcmarc.fileprovider", file)
         return uri
     }
 
     // Exercise 5
     private fun takePictureFromCamera() {
-//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        intent.resolveActivity(packageManager)?.let {
-//            val uri = dayUri(year, month, day)
-//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-//            println("camera clicked")
-//            startActivityForResult(intent, REQUEST_CAMERA)
-//        }
-
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val uri = dayUri(Date())
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         try {
             startActivityForResult(takePictureIntent, REQUEST_CAMERA)
         } catch (e: ActivityNotFoundException) {
@@ -160,26 +190,30 @@ class CreateNewParkFragment : PermittedFragment(), TimePickerDialog.OnTimeSetLis
         }
     }
 
+
     // Exercise 8
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        when (requestCode) {
-//            REQUEST_CAMERA -> {
-//                if (resultCode == Activity.RESULT_OK) {
-//                    loadDayPhotos()
-//                }
-//            }
-//            REQUEST_GALLERY -> {
-//                if (resultCode == Activity.RESULT_OK) {
-//                    data?.data?.let { uri ->
-//                        copyUriToUri(uri, dayUri(year, month, day))
-//                        loadDayPhotos()
-//                    }
-//                }
-//            }
-//            else -> {
-//                super.onActivityResult(requestCode, resultCode, data)
-//            }
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_CAMERA -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    updateImageViews()
+                }
+            }
+            REQUEST_GALLERY -> {
+                if (resultCode == Activity.RESULT_OK) {
+
+                    data?.data?.let { uri ->
+                                        copyUriToUri(uri, dayUri(Date()))
+                                        updateImageViews()
+                                    }
+
+
+                }
+            }
+            else -> {
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+        }
+    }
 
 }

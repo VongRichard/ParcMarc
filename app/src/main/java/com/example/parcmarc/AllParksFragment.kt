@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import android.widget.Button
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
@@ -38,13 +37,12 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         // Uncomment to quickly add test data
-//        for (i in 0..1) {
-//            val latLng = LatLng(0.1, 0.2)
-//            viewModel.addPark(Park("Disney World", latLng))
-//        }
+        for (i in 0..1) {
+            val latLng = LatLng(0.1, 0.2)
+            viewModel.addPark(Park("Disney World", latLng))
+        }
 
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
-            println("do da")
             findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)
         }
 

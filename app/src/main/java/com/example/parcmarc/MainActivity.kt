@@ -26,11 +26,18 @@ class MainActivity : PermittedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-        requestPermissions(permissions, 100, {
+        val locationPermissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        requestPermissions(locationPermissions, 100, {
             promptForGPS()
         }, {
             Toast.makeText(this, "GPS not permitted. You will not be able to unlock hiddenMessage messages.", Toast.LENGTH_LONG).show()
+        })
+
+        val storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        requestPermissions(storagePermissions, 100, {
+//            promptForStorage()
+        }, {
+            Toast.makeText(this, "Unable to store photos.", Toast.LENGTH_LONG).show()
         })
     }
 
@@ -47,6 +54,10 @@ class MainActivity : PermittedActivity() {
             }
         }
     }
+
+
+
+
 
 //    @SuppressLint("MissingPermission")
 //    private fun queryLocationForUnlock() {

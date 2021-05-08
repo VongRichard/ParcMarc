@@ -42,18 +42,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationValue" />
 
-    <EditText
-        android:id="@+id/editTextTime"
-        android:layout_width="match_parent"
+    <!--    <EditText-->
+    <!--        android:id="@+id/editTextTime"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="20dp"-->
+    <!--        android:layout_marginTop="50dp"-->
+    <!--        android:layout_marginEnd="20dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:inputType="time"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/timeLimitText"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/editTextName" />-->
+
+    <TextView
+        android:id="@+id/timeLimitText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:text="@string/time_limit"
+        app:layout_constraintBottom_toTopOf="@+id/addImageButton"
+        app:layout_constraintEnd_toStartOf="@+id/timeLimitValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+    <TextView
+        android:id="@+id/timeLimitValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/unlimited"
+        app:layout_constraintBottom_toBottomOf="@+id/timeLimitText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/timeLimitText"
+        app:layout_constraintTop_toTopOf="@+id/timeLimitText"
+        app:layout_constraintVertical_bias="0.376" />
 
     <Button
         android:id="@+id/addImageButton"
@@ -63,47 +89,11 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         android:text="Add Images (max. 4)"
+        app:layout_constraintBottom_toTopOf="@+id/imagesLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+        app:layout_constraintTop_toBottomOf="@+id/timeLimitText" />
 
-    <ImageView
-        android:id="@+id/park_image_1"
-        android:layout_width="120sp"
-        android:layout_height="120sp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/car_placeholder"
-        app:layout_constraintBottom_toTopOf="@+id/saveParkButton"
-        app:layout_constraintEnd_toStartOf="@+id/park_image_2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addImageButton" />
-
-    <ImageView
-        android:id="@+id/park_image_2"
-        android:layout_width="120sp"
-        android:layout_height="120sp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/car_placeholder"
-        app:layout_constraintBottom_toTopOf="@+id/saveParkButton"
-        app:layout_constraintEnd_toStartOf="@+id/park_image_3"
-        app:layout_constraintStart_toEndOf="@+id/park_image_1"
-        app:layout_constraintTop_toBottomOf="@+id/addImageButton" />
-
-    <ImageView
-        android:id="@+id/park_image_3"
-        android:layout_width="120sp"
-        android:layout_height="120sp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/car_placeholder"
-        app:layout_constraintBottom_toTopOf="@+id/saveParkButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/park_image_2"
-        app:layout_constraintTop_toBottomOf="@+id/addImageButton" />
 
     <Button
         android:id="@+id/saveParkButton"
@@ -114,6 +104,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/park_image_2" />
+        app:layout_constraintTop_toBottomOf="@+id/imagesLayout" />
+
+    <LinearLayout
+        android:id="@+id/imagesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/saveParkButton"
+        app:layout_constraintTop_toBottomOf="@+id/addImageButton"
+        tools:layout_editor_absoluteX="204dp">
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/park_image_1"-->
+        <!--            android:layout_width="120sp"-->
+        <!--            android:layout_height="120sp"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:layout_marginTop="50dp"-->
+        <!--            android:layout_marginBottom="50dp"-->
+        <!--            android:src="@drawable/car_placeholder"/>-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/park_image_2"-->
+        <!--            android:layout_width="120sp"-->
+        <!--            android:layout_height="120sp"-->
+        <!--            android:layout_marginTop="50dp"-->
+        <!--            android:layout_marginBottom="50dp"-->
+        <!--            android:src="@drawable/car_placeholder" />-->
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/park_image_3"-->
+        <!--            android:layout_width="120sp"-->
+        <!--            android:layout_height="120sp"-->
+        <!--            android:layout_marginTop="50dp"-->
+        <!--            android:layout_marginEnd="10dp"-->
+        <!--            android:layout_marginBottom="50dp"-->
+        <!--            android:src="@drawable/car_placeholder" />-->
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
