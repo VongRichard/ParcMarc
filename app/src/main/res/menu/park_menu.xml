@@ -12,11 +12,11 @@
         android:id="@+id/deleteItem"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/delete_icon_title"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/shareItem"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/share_icon_title"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="ifRoom" />
 
 </menu>

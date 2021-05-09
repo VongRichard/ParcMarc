@@ -2,6 +2,8 @@ package com.example.parcmarc
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -50,5 +52,26 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(park)
         val navigationController = this.findNavController()
         navigationController.navigate(action)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.allParksToolbar)
+        setUpToolbar(toolbar)
+    }
+
+    private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
+        toolbar.inflateMenu(R.menu.all_parks_menu);
+        toolbar.title = getString(R.string.app_name)
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.settingsItem -> {
+                    //TODO Open the Settings Screen
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

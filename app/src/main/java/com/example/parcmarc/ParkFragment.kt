@@ -60,7 +60,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         imageView3.setOnClickListener { onImageViewClick(imageView3) }
     }
 
-    fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
+    private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
         toolbar.inflateMenu(R.menu.park_menu);
         toolbar.title = args.park.name
         toolbar.setOnMenuItemClickListener {
