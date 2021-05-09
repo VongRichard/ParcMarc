@@ -9,7 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toolbar
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.MarkerOptions
@@ -33,7 +36,24 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.title = args.park.name
+
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        toolbar.inflateMenu(R.menu.park_menu);
+        toolbar.title = args.park.name
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.editItem -> {
+                    true
+                }
+                R.id.deleteItem -> {
+                    true
+                }
+                R.id.shareItem -> {
+                    true
+                }
+                else -> false
+            }
+        }
 
         mapView = requireView().findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState);

@@ -10,4 +10,7 @@
     <string name="first_image_desc">First image</string>
     <string name="second_image_desc">Second image</string>
     <string name="third_image_desc">Third image</string>
+    <string name="edit_icon_title">Edit Icon</string>
+    <string name="delete_icon_title">Delete Icon</string>
+    <string name="share_icon_title">Share Icon</string>
 </resources>
