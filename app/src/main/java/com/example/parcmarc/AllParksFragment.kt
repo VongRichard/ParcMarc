@@ -35,7 +35,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         // Uncomment to quickly add test data
-//        for (i in 0..0) {
+//        for (i in 0..5) {
 //            val latLng = LatLng(-43.507711, 172.562425)
 //            viewModel.addPark(Park("Disney World", latLng))
 //        }
