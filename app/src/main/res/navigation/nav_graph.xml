@@ -25,6 +25,9 @@
         <argument
             android:name="park"
             app:argType="com.example.parcmarc.Park" />
+        <action
+            android:id="@+id/action_parkFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
     </fragment>
         tools:layout="@layout/fragment_park" />
     <fragment
@@ -32,4 +35,9 @@
         android:name="com.example.parcmarc.CreateNewParkFragment"
         android:label="fragment_create_new_park_location"
         tools:layout="@layout/fragment_create_new_park" />
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.example.parcmarc.ImageFragment"
+        android:label="fragment_image"
+        tools:layout="@layout/fragment_image" />
 </navigation>

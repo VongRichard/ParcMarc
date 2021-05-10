@@ -10,4 +10,11 @@
     <string name="unlimited">Unlimited</string>
     <string name="duration">Duration:</string>
     <string name="name">Name...</string>
+    <string name="first_image_desc">First image</string>
+    <string name="second_image_desc">Second image</string>
+    <string name="third_image_desc">Third image</string>
+    <string name="edit_icon_title">Edit</string>
+    <string name="delete_icon_title">Delete</string>
+    <string name="share_icon_title">Share</string>
+    <string name="settings_icon_title">Settings</string>
 </resources>

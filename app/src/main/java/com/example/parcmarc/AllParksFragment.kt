@@ -2,6 +2,8 @@ package com.example.parcmarc
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import android.widget.Button
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
@@ -40,7 +43,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
         // Uncomment to quickly add test data
 //        for (i in 0..1) {
-//            val latLng = LatLng(0.1, 0.2)
+//            val latLng = LatLng(-43.507711, 172.562425)
 //            val images: MutableList<File> = mutableListOf()
 //            viewModel.addPark(Park("Disney World", latLng, null), images)
 //        }
@@ -56,7 +59,29 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
     override fun onParkClick(position: Int) {
         val park = viewModel.parks.value!![position]
+        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(park)
         val navigationController = this.findNavController()
-        navigationController.navigate(R.id.action_allParksFragment_to_parkFragment)
+        navigationController.navigate(action)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.allParksToolbar)
+        setUpToolbar(toolbar)
+    }
+
+    private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
+        toolbar.inflateMenu(R.menu.all_parks_menu);
+        toolbar.title = getString(R.string.app_name)
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.settingsItem -> {
+                    //TODO Open the Settings Screen
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }
