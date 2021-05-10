@@ -5,17 +5,17 @@
 
     <item
         android:id="@+id/editItem"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/edit_icon_white"
         android:title="@string/edit_icon_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deleteItem"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/delete_icon_white"
         android:title="@string/delete_icon_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/shareItem"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/share_icon_white"
         android:title="@string/share_icon_title"
         app:showAsAction="ifRoom" />
 
