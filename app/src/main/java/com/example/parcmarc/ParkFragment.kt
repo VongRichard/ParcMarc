@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -21,6 +22,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 
 class ParkFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: ParkViewModel by activityViewModels() {
@@ -28,6 +32,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     }
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
+    private var images: List<ParkImage> = listOf()
     private val args: ParkFragmentArgs by navArgs()
 
     fun onImageViewClick(imageView: ImageView) {
@@ -58,7 +63,25 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         imageView2.setOnClickListener { onImageViewClick(imageView2) }
         val imageView3 = requireView().findViewById<ImageView>(R.id.park_image_3)
         imageView3.setOnClickListener { onImageViewClick(imageView3) }
+
+        GlobalScope.launch {
+            images = viewModel.findParkImagesByParkId(args.park.id)
+            requireActivity().runOnUiThread {
+                val imageViews = listOf(imageView1, imageView2, imageView3)
+                for (i in 0..2) {
+                    if (i+1 <= images.size) {
+                        val bitmap = BitmapFactory.decodeFile(images[i].imageURI)
+                        imageViews[i].setImageBitmap(bitmap)
+                        imageViews[i].visibility = View.VISIBLE
+                    } else {
+                        imageViews[i].visibility = View.INVISIBLE
+                    }
+                }
+            }
+
+        }
     }
+
 
     private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
         toolbar.inflateMenu(R.menu.park_menu);
