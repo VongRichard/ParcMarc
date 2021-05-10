@@ -43,7 +43,6 @@ class ParkAdapter(private var parks: List<Park>, private val onParkListener: OnP
             val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
             val timeLeftStr = "$hours:$minutes"
             viewHolder.remainingTextView.text = timeLeftStr
-
         }
     }
 
