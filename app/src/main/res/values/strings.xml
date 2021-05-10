@@ -8,5 +8,6 @@
     <string name="park_image_description">Park Image</string>
     <string name="add_button_description">Add button</string>
     <string name="unlimited">Unlimited</string>
-    <string name="time_limit">Time Limit:</string>
+    <string name="duration">Duration:</string>
+    <string name="name">Name...</string>
 </resources>

@@ -25,6 +25,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -73,6 +74,10 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             promptForAdd()
         }
 
+        view.findViewById<Button>(R.id.saveParkButton)?.setOnClickListener {
+            addNewPark()
+        }
+
         view.findViewById<ImageButton>(R.id.updateLocationButton)?.setOnClickListener {
             updateLocation()
         }
@@ -113,15 +118,25 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
     private fun addNewPark() {
-        TODO("Not yet implemented")
-//        val newFriend = Park(
-//            nameValue.text.toString(),
-//            timeValue.text.toString(),
-//            homeBox.text.toString(),
-//            phoneBox.text.toString(),
-//            emailBox.text.toString()
-//        )
-//        viewModel.addFriend(newFriend)
+        var endTime: Date? = Date()
+        val hour = prefs.getInt("hour", 0)
+        val minutes = prefs.getInt("minute", 0)
+        if (hour == minutes && minutes == 0) {
+            endTime = null
+        } else {
+            endTime!!.hours = endTime.hours + hour
+            endTime.minutes = endTime.minutes + minutes
+
+        }
+
+        val park = Park(
+            nameValue.text.toString(),
+            parkLocation,
+            endTime
+        )
+
+        viewModel.addPark(park, images)
+        findNavController().popBackStack()
     }
 
     private fun setFinalTime() {
@@ -133,11 +148,17 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
     override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
+
         prefs.edit().apply {
             putInt("hour", hour)
             putInt("minute", minute)
             apply()
         }
+        var duration = "Unlimited"
+        if (!(hour == minute && minute == 0)) {
+            duration = "$hour hour(s), $minute minute(s)"
+        }
+        timeLimitValue.text = duration
     }
 
 

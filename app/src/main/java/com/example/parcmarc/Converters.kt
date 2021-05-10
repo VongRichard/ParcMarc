@@ -13,4 +13,21 @@ class Converters {
 
     @TypeConverter
     fun latLngToString(latLng: LatLng) = latLng.latitude.toString() + "," + latLng.longitude.toString();
+
+    @TypeConverter
+    fun longToDate(value: Long): Date? {
+        val zeroLong:Long = 0
+        if (value == zeroLong) {
+            return null
+        }
+        return Date(value)
+    }
+
+    @TypeConverter
+    fun dateToLong(date: Date?): Long {
+        if (date == null) {
+            return 0
+        }
+        return date.time.toLong()
+    }
 }

@@ -17,6 +17,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.File
+import java.util.*
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
@@ -37,10 +39,11 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         // Uncomment to quickly add test data
-        for (i in 0..1) {
-            val latLng = LatLng(0.1, 0.2)
-            viewModel.addPark(Park("Disney World", latLng))
-        }
+//        for (i in 0..1) {
+//            val latLng = LatLng(0.1, 0.2)
+//            val images: MutableList<File> = mutableListOf()
+//            viewModel.addPark(Park("Disney World", latLng, null), images)
+//        }
 
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
             findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)

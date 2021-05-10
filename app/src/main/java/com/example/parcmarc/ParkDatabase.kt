@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Park::class], version = 1)
+@Database(entities = [Park::class, ParkImage::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class ParkDatabase: RoomDatabase() {
     abstract fun parkDao(): ParkDao
+    abstract fun parkImageDao(): ParkImageDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
