@@ -1,5 +1,6 @@
 package com.example.parcmarc
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.AlertDialog
@@ -10,6 +11,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -37,9 +41,15 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         ParkViewModelFactory((activity?.application as ParcMarcApplication).repository)
     }
 
-    private var locationValue: TextView? = view?.findViewById(R.id.locationValue)
-    private var nameValue: EditText? = view?.findViewById(R.id.editTextName)
-    private var timeValue: TextView? = view?.findViewById(R.id.timeLimitValue)
+    val hasLocationPermissions
+        get() = context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+    private var images: MutableList<File> = mutableListOf()
+    private lateinit var parkLocation: LatLng
+
+    private lateinit var locationValue: TextView
+    private lateinit var nameValue: EditText
+    private lateinit var timeLimitValue: TextView
     private lateinit var prefs: SharedPreferences
     private lateinit var imagesLayout: LinearLayout
 
@@ -63,10 +73,19 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             promptForAdd()
         }
 
+        view.findViewById<ImageButton>(R.id.updateLocationButton)?.setOnClickListener {
+            updateLocation()
+        }
+        //update location by default
+        updateLocation()
+
+        locationValue = view.findViewById(R.id.locationValue)
+        nameValue = view.findViewById(R.id.editTextName)
+        timeLimitValue = view.findViewById(R.id.timeLimitValue)
+
         imagesLayout = view.findViewById(R.id.imagesLayout)
 
-        timeValue?.setOnClickListener {
-            println("doo daa")
+        timeLimitValue.setOnClickListener {
             setFinalTime()
         }
 
@@ -75,12 +94,8 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private fun updateImageViews() {
         imagesLayout.removeAllViews()
 
-        val photos: Array<File>? =  photoDirectory
-                .listFiles { file, _ -> file.isDirectory }
-        if (!photos.isNullOrEmpty()) {
-            for (photo in photos) {
-                addImageView(photo)
-            }
+        for (image in images) {
+            addImageView(image)
         }
 
     }
@@ -146,6 +161,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val file = File(photoDirectory, String.format("%02d_%02d_%02d_%02d_%02d_%02d.jpg",
                                         year, month, day, hour, minute, second))
         file.parentFile.mkdirs()
+        images.add(file)
         return file
     }
 
@@ -167,6 +183,24 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             startActivityForResult(takePictureIntent, REQUEST_CAMERA)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
+        }
+    }
+
+    private fun updateLocation() {
+        val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val listener = object : LocationListener {
+            override fun onLocationChanged(location: Location) {
+                parkLocation = LatLng(location.latitude, location.longitude)
+                val locationText = "${location.latitude}, ${location.longitude}"
+                locationValue!!.text = locationText
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+            override fun onProviderDisabled(provider: String) {}
+            override fun onProviderEnabled(provider: String) {}
+        }
+        if (hasLocationPermissions) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
         }
     }
 
