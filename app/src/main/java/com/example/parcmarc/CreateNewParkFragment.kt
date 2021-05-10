@@ -71,7 +71,9 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val view = inflater.inflate(R.layout.fragment_create_new_park, container, false)
 
         view.findViewById<Button>(R.id.addImageButton)?.setOnClickListener {
-            promptForAdd()
+            if (images.size < 3) {
+                promptForAdd()
+            }
         }
 
         view.findViewById<Button>(R.id.saveParkButton)?.setOnClickListener {
@@ -105,13 +107,17 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     }
 
+    private fun intToSp(integer: Int): Int {
+        return (resources.displayMetrics.density*integer + 1f).toInt()
+    }
+
     private fun addImageView(image: File) {
         val imageView = ImageView(context)
         val bitmap = BitmapFactory.decodeFile(image.absolutePath)
         imageView.setImageBitmap(bitmap)
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
 //                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
-                120, 120)
+            intToSp(120), intToSp(120))
         imageView.layoutParams = layoutParams
         imageView.tag = "${image.nameWithoutExtension}View"
         imagesLayout.addView(imageView)
