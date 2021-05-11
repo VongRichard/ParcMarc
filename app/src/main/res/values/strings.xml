@@ -17,4 +17,5 @@
     <string name="delete_icon_title">Delete</string>
     <string name="share_icon_title">Share</string>
     <string name="settings_icon_title">Settings</string>
+    <string name="full_image_display_desc">Full image display</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,7 +24,7 @@
         android:layout_marginBottom="50dp"
         android:text="@string/default_time_remaining"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/park_image_1"
+        app:layout_constraintBottom_toTopOf="@+id/park_image_2"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -36,42 +37,55 @@
         app:layout_constraintStart_toEndOf="@+id/park_time_remaining"
         app:layout_constraintTop_toTopOf="@+id/park_time_remaining" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/park_image_1"
         android:layout_width="120sp"
         android:layout_height="120sp"
-        android:layout_marginBottom="50dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/first_image_desc"
+        android:scaleType="fitCenter"
         android:src="@drawable/car_placeholder"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/park_image_2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/first_image_desc"
-        android:adjustViewBounds="true"/>
+        app:layout_constraintTop_toTopOf="@+id/park_image_2" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/park_image_2"
         android:layout_width="120sp"
         android:layout_height="120sp"
+        android:layout_marginBottom="50dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/car_placeholder"
+        android:visibility="invisible"
+        android:contentDescription="@string/second_image_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/park_image_3"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/park_image_1"
-        app:layout_constraintTop_toTopOf="@+id/park_image_1"
-        android:contentDescription="@string/second_image_desc"
-        android:adjustViewBounds="true"/>
+        app:layout_constraintStart_toEndOf="@+id/park_image_1" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/park_image_3"
         android:layout_width="120sp"
         android:layout_height="120sp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/car_placeholder"
+        android:visibility="invisible"
+        android:contentDescription="@string/third_image_desc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/park_image_2"
-        app:layout_constraintTop_toTopOf="@+id/park_image_2"
-        android:contentDescription="@string/third_image_desc"
-        android:adjustViewBounds="true"/>
+        app:layout_constraintTop_toTopOf="@+id/park_image_2" />
+
+    <LinearLayout android:id="@+id/dim_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70000000"
+        android:visibility="invisible"
+        android:orientation="horizontal" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -83,4 +97,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:contentDescription="@string/full_image_display_desc" />
 </androidx.constraintlayout.widget.ConstraintLayout>
