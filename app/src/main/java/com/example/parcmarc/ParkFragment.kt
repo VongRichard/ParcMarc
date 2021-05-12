@@ -44,10 +44,6 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     private var currentAnimator: Animator? = null
     private var shortAnimationDuration: Int = 0
 
-    private fun onImageViewClick(imageView: ImageView) {
-        println("yay")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,24 +62,22 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         val imageView2 = requireView().findViewById<ImageButton>(R.id.park_image_2)
         val imageView3 = requireView().findViewById<ImageButton>(R.id.park_image_3)
 
-        GlobalScope.launch {
-            images = viewModel.findParkImagesByParkId(args.park.id)
-            requireActivity().runOnUiThread {
-                val imageViews = listOf(imageView1, imageView2, imageView3)
-                for (i in 0..2) {
-                    if (i+1 <= images.size) {
-                        val bitmap = BitmapFactory.decodeFile(images[i].imageURI)
-                        imageViews[i].setImageBitmap(bitmap)
-                        imageViews[i].visibility = View.VISIBLE
+        images = args.parkWithParkImages.images
+        requireActivity().runOnUiThread {
+            val imageViews = listOf(imageView1, imageView2, imageView3)
+            for (i in 0..2) {
+                if (i+1 <= images.size) {
+                    val bitmap = BitmapFactory.decodeFile(images[i].imageURI)
+                    imageViews[i].setImageBitmap(bitmap)
+                    imageViews[i].visibility = View.VISIBLE
 
-                        imageViews[i].setOnClickListener { zoomImageFromThumb(imageViews[i], bitmap) }
-                    }
+                    imageViews[i].setOnClickListener { zoomImageFromThumb(imageViews[i], bitmap) }
                 }
             }
-
-            // Retrieve and cache the system's default "short" animation time.
-            shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
         }
+
+        // Retrieve and cache the system's default "short" animation time.
+        shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
         mapView = requireView().findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState);
@@ -228,7 +222,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
 
     private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
         toolbar.inflateMenu(R.menu.park_menu);
-        toolbar.title = args.park.name
+        toolbar.title = args.parkWithParkImages.park.name
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.editItem -> {
@@ -241,7 +235,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                     builder.setTitle("Are you sure you want to delete this Park?")
                     builder.apply {
                         setPositiveButton("Delete") { dialog, id ->
-                            viewModel.removePark(args.park)
+                            viewModel.removePark(args.parkWithParkImages.park)
                             this@ParkFragment.findNavController().popBackStack();
                         }
                         setNegativeButton("Cancel") { dialog, id ->
@@ -253,7 +247,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                 R.id.shareItem -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_SUBJECT, args.park.name + " Location")
+                    intent.putExtra(Intent.EXTRA_SUBJECT, args.parkWithParkImages.park.name + " Location")
                     intent.putExtra(Intent.EXTRA_TEXT, generateShareBody())
                     startActivity(intent)
                     true
@@ -267,9 +261,9 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
      * Creates and returns a message body including a Google Maps link to the Park's location.
      */
     private fun generateShareBody(): String {
-        return "I've parked my car at these coordinates: " + args.park.location.toString() +
-                "\n\n" + "Link:\n" + "https://maps.google.com/?q=" + args.park.location.latitude +
-                "," + args.park.location.longitude
+        return "I've parked my car at these coordinates: " + args.parkWithParkImages.park.location.toString() +
+                "\n\n" + "Link:\n" + "https://maps.google.com/?q=" + args.parkWithParkImages.park.location.latitude +
+                "," + args.parkWithParkImages.park.location.longitude
     }
 
     @SuppressLint("MissingPermission")
@@ -277,10 +271,10 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         map.addMarker(
             MarkerOptions()
-                .position(args.park.location)
+                .position(args.parkWithParkImages.park.location)
                 .title("Location")
         )
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(args.park.location, 15F))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(args.parkWithParkImages.park.location, 15F))
 
         map.setOnMapLongClickListener {
             // TODO Open in Google Maps?

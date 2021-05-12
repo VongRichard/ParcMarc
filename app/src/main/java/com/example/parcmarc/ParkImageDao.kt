@@ -17,9 +17,6 @@ interface ParkImageDao {
     @Query("SELECT * FROM park_image")
     fun getAll(): Flow<List<ParkImage>>
 
-    @Query("SELECT * FROM park_image WHERE parkId=:parkId")
-    fun findParkImagesByParkId(parkId: Long): List<ParkImage>
-
     @Query("SELECT COUNT(*) FROM park_image")
     fun getCount(): Flow<Int>
 }

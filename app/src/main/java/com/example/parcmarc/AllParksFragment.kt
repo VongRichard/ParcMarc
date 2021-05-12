@@ -37,16 +37,9 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         val view = inflater.inflate(R.layout.fragment_all_parks, container, false)
 
         val parkAdapter = ParkAdapter(listOf(),this)
-        viewModel.parks.observe(viewLifecycleOwner, { newParks ->
-            parkAdapter.setData(newParks)
+        viewModel.parks.observe(viewLifecycleOwner, { newParksWithImages ->
+            parkAdapter.setData(newParksWithImages)
         })
-
-        // Uncomment to quickly add test data
-//        for (i in 0..1) {
-//            val latLng = LatLng(-43.507711, 172.562425)
-//            val images: MutableList<File> = mutableListOf()
-//            viewModel.addPark(Park("Disney World", latLng, null), images)
-//        }
 
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
             findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)
@@ -58,8 +51,8 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
     }
 
     override fun onParkClick(position: Int) {
-        val park = viewModel.parks.value!![position]
-        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(park)
+        val parkWithParkImages = viewModel.parks.value!![position]
+        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(parkWithParkImages)
         val navigationController = this.findNavController()
         navigationController.navigate(action)
     }

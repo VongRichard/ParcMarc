@@ -23,8 +23,8 @@
         android:label="fragment_park"
         tools:layout="@layout/fragment_park" >
         <argument
-            android:name="park"
-            app:argType="com.example.parcmarc.Park" />
+            android:name="parkWithParkImages"
+            app:argType="com.example.parcmarc.ParkWithParkImages" />
     </fragment>
     <fragment
         android:id="@+id/createNewParkLocation"

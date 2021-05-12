@@ -14,9 +14,10 @@ interface ParkDao {
     @Delete
     suspend fun delete(park: Park)
 
-    @Query("SELECT * FROM park")
-    fun getAll(): Flow<List<Park>>
-
     @Query("SELECT COUNT(*) FROM park")
     fun getCount(): Flow<Int>
+
+    @Transaction
+    @Query("SELECT * FROM park")
+    fun getAll(): Flow<List<ParkWithParkImages>>
 }

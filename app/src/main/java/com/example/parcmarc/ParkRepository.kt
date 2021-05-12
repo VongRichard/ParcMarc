@@ -5,19 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 class ParkRepository(private val parkDao: ParkDao,
                      private val parkImageDao: ParkImageDao) {
-    val parks: Flow<List<Park>> = parkDao.getAll()
+    val parks: Flow<List<ParkWithParkImages>> = parkDao.getAll()
     val numParks: Flow<Int> = parkDao.getCount()
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insert(park: Park): Long {
         return parkDao.insert(park)
-    }
-
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun findParkImagesByParkId(parkId: Long): List<ParkImage> {
-        return parkImageDao.findParkImagesByParkId(parkId)
     }
 
     @Suppress("RedundantSuspendModifier")
