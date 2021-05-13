@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.io.File
 
 class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, private val onParkListener: OnParkListener)
     : RecyclerView.Adapter<ParkAdapter.ParkViewHolder>() {
+
+    private val utils: Utilities = Utilities()
 
     class ParkViewHolder(itemView: View, val onParkListener: OnParkListener)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -49,8 +52,7 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
         }
         if (parksWithParkImages[position].images.isNotEmpty()) {
             val image = parksWithParkImages[position].images[0]
-            val bitmap = BitmapFactory.decodeFile(image.imageURI)
-            viewHolder.imageView.setImageBitmap(bitmap)
+            viewHolder.imageView.setImageBitmap(utils.getRotatedBitmapFromFile(File(image.imageURI)))
         }
     }
 

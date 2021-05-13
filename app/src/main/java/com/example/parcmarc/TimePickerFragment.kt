@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 
 class TimePickerFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = TimePickerDialog(activity, listener, 6, 0, true)
+        val dialog = TimePickerDialog(activity, listener, 0, 0, true)
         return dialog
     }
 

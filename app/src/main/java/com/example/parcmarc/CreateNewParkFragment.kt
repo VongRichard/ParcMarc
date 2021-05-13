@@ -1,8 +1,8 @@
 package com.example.parcmarc
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -18,17 +17,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.text.InputType
+import android.util.Log
 import android.view.*
-import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
 import java.util.*
@@ -43,16 +39,17 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
     val hasLocationPermissions
-        get() = context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        get() = requireContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     private var images: MutableList<File> = mutableListOf()
-    private var parkLocation: LatLng = LatLng(0.0, 0.0)
+    private lateinit var parkLocation: LatLng
 
     private lateinit var locationValue: TextView
     private lateinit var nameValue: EditText
     private lateinit var timeLimitValue: TextView
     private lateinit var prefs: SharedPreferences
     private lateinit var imagesLayout: LinearLayout
+    private val utils: Utilities = Utilities()
 
 
     private val photoDirectory
@@ -60,9 +57,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         prefs = PreferenceManager.getDefaultSharedPreferences(context)
-//        updateImageViews()
+        parkLocation = LatLng(0.0, 0.0)
+
+        //update location by default
+        updateLocation()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -83,13 +82,10 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         view.findViewById<ImageButton>(R.id.updateLocationButton)?.setOnClickListener {
             updateLocation()
         }
-        //update location by default
-        updateLocation()
 
         locationValue = view.findViewById(R.id.locationValue)
         nameValue = view.findViewById(R.id.editTextName)
         timeLimitValue = view.findViewById(R.id.timeLimitValue)
-
         imagesLayout = view.findViewById(R.id.imagesLayout)
 
         timeLimitValue.setOnClickListener {
@@ -107,21 +103,22 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     }
 
+
     private fun intToSp(integer: Int): Int {
         return (resources.displayMetrics.density*integer + 1f).toInt()
     }
 
+
     private fun addImageView(image: File) {
         val imageView = ImageView(context)
-        val bitmap = BitmapFactory.decodeFile(image.absolutePath)
-        imageView.setImageBitmap(bitmap)
+        imageView.setImageBitmap(utils.getRotatedBitmapFromFile(image))
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             intToSp(120), intToSp(120))
         imageView.layoutParams = layoutParams
         imageView.tag = "${image.nameWithoutExtension}View"
         imagesLayout.addView(imageView)
     }
+
 
     private fun addNewPark() {
         var endTime: Date? = Date()
@@ -213,26 +210,36 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun updateLocation() {
-        val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
         val listener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
-                parkLocation = LatLng(location.latitude, location.longitude)
-                val locationText = "${location.latitude}, ${location.longitude}"
-                locationValue!!.text = locationText
+                updateLocationHelper(location)
+                locationManager.removeUpdates(this)
             }
 
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-            override fun onProviderDisabled(provider: String) {}
+            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
             override fun onProviderEnabled(provider: String) {}
+            override fun onProviderDisabled(provider: String) {}
         }
+
         if (hasLocationPermissions) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
         }
     }
 
 
-    // Exercise 6
+    private fun updateLocationHelper(location: Location) {
+        parkLocation = LatLng(location.latitude, location.longitude)
+        val locationText = "${location.latitude}, ${location.longitude}"
+        locationValue!!.text = locationText
+        Log.d("yo","location updated")
+    }
+
+
     private fun takePictureFromGallery() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -267,8 +274,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
                                         copyUriToUri(uri, dayUri(Date()))
                                         updateImageViews()
                                     }
-
-
                 }
             }
             else -> {

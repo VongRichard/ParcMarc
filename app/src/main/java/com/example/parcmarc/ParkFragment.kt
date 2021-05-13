@@ -43,6 +43,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     private val args: ParkFragmentArgs by navArgs()
     private var currentAnimator: Animator? = null
     private var shortAnimationDuration: Int = 0
+    private val utils: Utilities = Utilities()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,8 +68,10 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
             val imageViews = listOf(imageView1, imageView2, imageView3)
             for (i in 0..2) {
                 if (i+1 <= images.size) {
-                    val bitmap = BitmapFactory.decodeFile(images[i].imageURI)
+                    val bitmap = utils.getRotatedBitmapFromFile(File(images[i].imageURI))
+
                     imageViews[i].setImageBitmap(bitmap)
+
                     imageViews[i].visibility = View.VISIBLE
 
                     imageViews[i].setOnClickListener { zoomImageFromThumb(imageViews[i], bitmap) }

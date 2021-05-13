@@ -9,7 +9,7 @@
     <string name="add_button_description">Add button</string>
     <string name="unlimited">Unlimited</string>
     <string name="duration">Duration:</string>
-    <string name="name">Name...</string>
+    <string name="name">Name…</string>
     <string name="first_image_desc">First image</string>
     <string name="second_image_desc">Second image</string>
     <string name="third_image_desc">Third image</string>
@@ -18,4 +18,8 @@
     <string name="share_icon_title">Share</string>
     <string name="settings_icon_title">Settings</string>
     <string name="full_image_display_desc">Full image display</string>
+    <string name="works_best_in_an_open_environment">Searching for GPS signal…</string>
+    <string name="location">Location:</string>
+    <string name="add_images_max_3">Add Images (max. 3)</string>
+    <string name="save">Save</string>
 </resources>
