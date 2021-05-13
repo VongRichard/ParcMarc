@@ -46,7 +46,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         get() = context?.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     private var images: MutableList<File> = mutableListOf()
-    private lateinit var parkLocation: LatLng
+    private var parkLocation: LatLng = LatLng(0.0, 0.0)
 
     private lateinit var locationValue: TextView
     private lateinit var nameValue: EditText
