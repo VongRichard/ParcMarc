@@ -96,13 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="50dp"
                 android:text="@string/add_images_max_3"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@id/imagesLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/saveParkButton" />
 
             <Button
                 android:id="@+id/saveParkButton"
@@ -122,10 +122,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/saveParkButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
