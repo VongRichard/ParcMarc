@@ -62,6 +62,10 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         updateLocation()
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
+//            viewModel.clearTempImages()
+//            viewModel.setDuration(Pair(0, 0))
+//            viewModel.setLocation(LatLng(0.0, 0.0))
+
             viewModel.clearCreateEditTemps()
         }
     }
@@ -143,6 +147,9 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         )
 
         viewModel.addPark(park, viewModel.tempImages.value!!)
+//        viewModel.clearTempImages()
+//        viewModel.setDuration(Pair(0, 0))
+//        viewModel.setLocation(LatLng(0.0, 0.0))
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }

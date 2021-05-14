@@ -1,10 +1,7 @@
 package com.example.parcmarc
 
-import android.graphics.Bitmap
-import android.preference.PreferenceManager
 import androidx.lifecycle.*
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
@@ -55,7 +52,7 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _tempDuration.notifyObserver()
     }
 
-    fun clearCreateEditTemps() = viewModelScope.launch {
+    fun clearCreateEditTemps() {
         clearTempImages()
         setDuration(Pair(0, 0))
         setLocation(LatLng(0.0, 0.0))
