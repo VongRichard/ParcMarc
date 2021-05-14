@@ -6,166 +6,187 @@
     android:layout_height="match_parent"
     tools:context=".CreateNewParkFragment">
 
-    <TextView
-        android:id="@+id/locationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:text="@string/location"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/locationValue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/locationValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/works_best_in_an_open_environment"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/updateLocationButton"
-        app:layout_constraintStart_toEndOf="@+id/locationText"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextName"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationValue" />
-
-
-    <TextView
-        android:id="@+id/timeLimitText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="10dp"
-
-        android:layout_marginBottom="50dp"
-        android:text="@string/duration"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/addImageButton"
-        app:layout_constraintEnd_toStartOf="@+id/timeLimitValue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
-
-    <TextView
-        android:id="@+id/timeLimitValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/unlimited"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/addImageButton"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintStart_toEndOf="@+id/timeLimitText"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
-
-
-    <Button
-        android:id="@+id/addImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="50dp"
-        android:text="@string/add_images_max_3"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/imagesLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/saveParkButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/save"
-        android:textSize="18sp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imagesLayout" />
-
-    <LinearLayout
-        android:id="@+id/imagesLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addImageButton">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/park_image_1"-->
-        <!--            android:layout_width="120sp"-->
-        <!--            android:layout_height="120sp"-->
-        <!--            android:layout_marginStart="10dp"-->
-        <!--            android:layout_marginTop="50dp"-->
-        <!--            android:layout_marginBottom="50dp"-->
-        <!--            android:src="@drawable/car_placeholder"/>-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/park_image_2"-->
-        <!--            android:layout_width="120sp"-->
-        <!--            android:layout_height="120sp"-->
-        <!--            android:layout_marginTop="50dp"-->
-        <!--            android:layout_marginBottom="50dp"-->
-        <!--            android:src="@drawable/car_placeholder" />-->
+            <TextView
+                android:id="@+id/locationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/location"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/locationValue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <ImageView-->
-        <!--            android:id="@+id/park_image_3"-->
-        <!--            android:layout_width="120sp"-->
-        <!--            android:layout_height="120sp"-->
-        <!--            android:layout_marginTop="50dp"-->
-        <!--            android:layout_marginEnd="10dp"-->
-        <!--            android:layout_marginBottom="50dp"-->
-        <!--            android:src="@drawable/car_placeholder" />-->
+            <TextView
+                android:id="@+id/locationValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/works_best_in_an_open_environment"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/updateLocationButton"
+                app:layout_constraintStart_toEndOf="@+id/locationText"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/editTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/locationValue" />
 
-    <ImageButton
-        android:id="@+id/updateLocationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/sync_icon_white"
-        app:layout_constraintBottom_toTopOf="@+id/editTextName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/clear_icon_white"
-        app:layout_constraintBottom_toTopOf="@+id/addImageButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+            <TextView
+                android:id="@+id/timeLimitText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="10dp"
+
+                android:layout_marginBottom="50dp"
+                android:text="@string/duration"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/addImageButton"
+                app:layout_constraintEnd_toStartOf="@+id/timeLimitValue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+            <TextView
+                android:id="@+id/timeLimitValue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="50dp"
+                android:text="@string/unlimited"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/addImageButton"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintStart_toEndOf="@+id/timeLimitText"
+                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+
+            <Button
+                android:id="@+id/addImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="50dp"
+                android:text="@string/add_images_max_3"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/imagesLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/saveParkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/save"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imagesLayout" />
+
+            <LinearLayout
+                android:id="@+id/imagesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addImageButton">
+
+                <!--        <ImageView-->
+                <!--            android:id="@+id/park_image_1"-->
+                <!--            android:layout_width="120sp"-->
+                <!--            android:layout_height="120sp"-->
+                <!--            android:layout_marginStart="10dp"-->
+                <!--            android:layout_marginTop="50dp"-->
+                <!--            android:layout_marginBottom="50dp"-->
+                <!--            android:src="@drawable/car_placeholder"/>-->
+
+                <!--        <ImageView-->
+                <!--            android:id="@+id/park_image_2"-->
+                <!--            android:layout_width="120sp"-->
+                <!--            android:layout_height="120sp"-->
+                <!--            android:layout_marginTop="50dp"-->
+                <!--            android:layout_marginBottom="50dp"-->
+                <!--            android:src="@drawable/car_placeholder" />-->
+
+                <!--        <ImageView-->
+                <!--            android:id="@+id/park_image_3"-->
+                <!--            android:layout_width="120sp"-->
+                <!--            android:layout_height="120sp"-->
+                <!--            android:layout_marginTop="50dp"-->
+                <!--            android:layout_marginEnd="10dp"-->
+                <!--            android:layout_marginBottom="50dp"-->
+                <!--            android:src="@drawable/car_placeholder" />-->
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/updateLocationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/sync_icon_white"
+                app:layout_constraintBottom_toTopOf="@+id/editTextName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/clear_icon_white"
+                app:layout_constraintBottom_toTopOf="@+id/addImageButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

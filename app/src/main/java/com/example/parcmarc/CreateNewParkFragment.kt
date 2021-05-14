@@ -20,10 +20,13 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
@@ -41,15 +44,12 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     val hasLocationPermissions
         get() = requireContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-    private var images: MutableList<File> = mutableListOf()
-    private lateinit var parkLocation: LatLng
-
     private lateinit var locationValue: TextView
     private lateinit var nameValue: EditText
     private lateinit var timeLimitValue: TextView
-    private lateinit var prefs: SharedPreferences
     private lateinit var imagesLayout: LinearLayout
     private val utils: Utilities = Utilities()
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     private val photoDirectory
@@ -57,11 +57,13 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        parkLocation = LatLng(0.0, 0.0)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        //update location by default
         updateLocation()
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            viewModel.clearCreateEditTemps()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +72,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val view = inflater.inflate(R.layout.fragment_create_new_park, container, false)
 
         view.findViewById<Button>(R.id.addImageButton)?.setOnClickListener {
-            if (images.size < 3) {
+            if (viewModel.numTempImages.value!! < 3) {
                 promptForAdd()
             }
         }
@@ -83,6 +85,8 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             updateLocation()
         }
 
+
+
         locationValue = view.findViewById(R.id.locationValue)
         nameValue = view.findViewById(R.id.editTextName)
         timeLimitValue = view.findViewById(R.id.timeLimitValue)
@@ -92,15 +96,17 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             setFinalTime()
         }
 
+        updateImageViews()
+        updateDurationHelper()
+
         return view
     }
     private fun updateImageViews() {
         imagesLayout.removeAllViews()
 
-        for (image in images) {
+        for (image in viewModel.tempImages.value!!) {
             addImageView(image)
         }
-
     }
 
 
@@ -122,46 +128,47 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun addNewPark() {
         var endTime: Date? = Date()
-        val hour = prefs.getInt("hour", 0)
-        val minutes = prefs.getInt("minute", 0)
-        if (hour == minutes && minutes == 0) {
+        val duration = viewModel.tempDuration.value!!
+        if (duration.first == duration.second && duration.second == 0) {
             endTime = null
         } else {
-            endTime!!.hours = endTime.hours + hour
-            endTime.minutes = endTime.minutes + minutes
-
+            endTime!!.hours = endTime.hours + duration.first
+            endTime.minutes = endTime.minutes + duration.second
         }
 
         val park = Park(
             nameValue.text.toString(),
-            parkLocation,
+            viewModel.tempLocation.value!!,
             endTime
         )
 
-        viewModel.addPark(park, images)
+        viewModel.addPark(park, viewModel.tempImages.value!!)
+        viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }
 
     private fun setFinalTime() {
         val fragment = TimePickerFragment()
         fragment.listener = this
-        fragment.hour = prefs.getInt("hour", 6)
-        fragment.minute = prefs.getInt("minute", 0)
+        val duration = viewModel.tempDuration.value!!
+        fragment.hour = duration.first
+        fragment.minute = duration.second
         activity?.let { fragment.show(it.supportFragmentManager, null) }
     }
 
-    override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
-
-        prefs.edit().apply {
-            putInt("hour", hour)
-            putInt("minute", minute)
-            apply()
-        }
+    private fun updateDurationHelper() {
+        val tempDuration = viewModel.tempDuration.value!!
         var duration = "Unlimited"
-        if (!(hour == minute && minute == 0)) {
-            duration = "$hour hour(s), $minute minute(s)"
+        if (!(tempDuration.first == tempDuration.second && tempDuration.second == 0)) {
+            duration = "${tempDuration.first} hour(s), ${tempDuration.second} minute(s)"
         }
         timeLimitValue.text = duration
+    }
+
+    override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
+        viewModel.setDuration(Pair(hour, minute))
+        updateDurationHelper()
+
     }
 
 
@@ -185,7 +192,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val file = File(photoDirectory, String.format("%02d_%02d_%02d_%02d_%02d_%02d.jpg",
                                         year, month, day, hour, minute, second))
         file.parentFile.mkdirs()
-        images.add(file)
+        viewModel.addTempImage(file)
         return file
     }
 
@@ -212,31 +219,19 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
-
-        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-        val listener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                updateLocationHelper(location)
-                locationManager.removeUpdates(this)
-            }
-
-            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        }
-
         if (hasLocationPermissions) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    if (location != null) updateLocationHelper(location)
+                }
         }
     }
 
 
     private fun updateLocationHelper(location: Location) {
-        parkLocation = LatLng(location.latitude, location.longitude)
+        viewModel.setLocation(LatLng(location.latitude, location.longitude))
         val locationText = "${location.latitude}, ${location.longitude}"
         locationValue!!.text = locationText
-        Log.d("yo","location updated")
     }
 
 

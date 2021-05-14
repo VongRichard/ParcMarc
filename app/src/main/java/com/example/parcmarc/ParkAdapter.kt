@@ -41,15 +41,15 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
 
     override fun onBindViewHolder(viewHolder: ParkViewHolder, position: Int) {
         viewHolder.textView.text = parksWithParkImages[position].park.toString()
-        val timeLeft = parksWithParkImages[position].park.timeLeft()
-        if (timeLeft == null) {
-            val unlimited = "Unlimited"
-            viewHolder.remainingTextView.text = unlimited
-        } else {
-            val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
-            val timeLeftStr = "$hours:$minutes"
-            viewHolder.remainingTextView.text = timeLeftStr
-        }
+//        val timeLeft = parksWithParkImages[position].park.timeLeft()
+//        if (timeLeft == null) {
+//            val unlimited = "Unlimited"
+//            viewHolder.remainingTextView.text = unlimited
+//        } else {
+//            val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
+//            val timeLeftStr = "$hours:$minutes"
+//            viewHolder.remainingTextView.text = timeLeftStr
+//        }
         if (parksWithParkImages[position].images.isNotEmpty()) {
             val image = parksWithParkImages[position].images[0]
             viewHolder.imageView.setImageBitmap(utils.getRotatedBitmapFromFile(File(image.imageURI)))
