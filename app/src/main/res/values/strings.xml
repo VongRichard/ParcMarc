@@ -22,4 +22,5 @@
     <string name="location">Location:</string>
     <string name="add_images_max_3">Add Images (max. 3)</string>
     <string name="save">Save</string>
+    <string name="park_button_description">park button description</string>
 </resources>

@@ -57,7 +57,8 @@
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/locationValue" />
+                app:layout_constraintTop_toBottomOf="@+id/locationValue"
+                android:autofillHints="current location" />
 
 
             <TextView
@@ -133,32 +134,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addImageButton">
 
-                <!--        <ImageView-->
-                <!--            android:id="@+id/park_image_1"-->
-                <!--            android:layout_width="120sp"-->
-                <!--            android:layout_height="120sp"-->
-                <!--            android:layout_marginStart="10dp"-->
-                <!--            android:layout_marginTop="50dp"-->
-                <!--            android:layout_marginBottom="50dp"-->
-                <!--            android:src="@drawable/car_placeholder"/>-->
-
-                <!--        <ImageView-->
-                <!--            android:id="@+id/park_image_2"-->
-                <!--            android:layout_width="120sp"-->
-                <!--            android:layout_height="120sp"-->
-                <!--            android:layout_marginTop="50dp"-->
-                <!--            android:layout_marginBottom="50dp"-->
-                <!--            android:src="@drawable/car_placeholder" />-->
-
-                <!--        <ImageView-->
-                <!--            android:id="@+id/park_image_3"-->
-                <!--            android:layout_width="120sp"-->
-                <!--            android:layout_height="120sp"-->
-                <!--            android:layout_marginTop="50dp"-->
-                <!--            android:layout_marginEnd="10dp"-->
-                <!--            android:layout_marginBottom="50dp"-->
-                <!--            android:src="@drawable/car_placeholder" />-->
-
             </LinearLayout>
 
             <ImageButton
@@ -171,7 +146,8 @@
                 android:src="@drawable/sync_icon_white"
                 app:layout_constraintBottom_toTopOf="@+id/editTextName"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/park_button_description" />
 
             <ImageButton
                 android:id="@+id/imageButton"
@@ -183,7 +159,8 @@
                 android:src="@drawable/clear_icon_white"
                 app:layout_constraintBottom_toTopOf="@+id/addImageButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextName"
+                android:contentDescription="@string/park_button_description" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,18 +6,13 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.addCallback
@@ -25,8 +20,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
 import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
@@ -50,6 +44,8 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var imagesLayout: LinearLayout
     private val utils: Utilities = Utilities()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
 
 
     private val photoDirectory
@@ -58,21 +54,18 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        locationCallback = createLocationCallback()
+        locationRequest = LocationRequest.create()
 
         updateLocation()
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-//            viewModel.clearTempImages()
-//            viewModel.setDuration(Pair(0, 0))
-//            viewModel.setLocation(LatLng(0.0, 0.0))
-
             viewModel.clearCreateEditTemps()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_new_park, container, false)
 
         view.findViewById<Button>(R.id.addImageButton)?.setOnClickListener {
@@ -105,6 +98,21 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         return view
     }
+
+
+    private fun createLocationCallback(): LocationCallback {
+        return object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations) {
+                    updateLocationHelper(location)
+                    fusedLocationClient.removeLocationUpdates(this@CreateNewParkFragment.locationCallback)
+                }
+            }
+        }
+    }
+
+
     private fun updateImageViews() {
         imagesLayout.removeAllViews()
 
@@ -147,9 +155,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         )
 
         viewModel.addPark(park, viewModel.tempImages.value!!)
-//        viewModel.clearTempImages()
-//        viewModel.setDuration(Pair(0, 0))
-//        viewModel.setLocation(LatLng(0.0, 0.0))
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }
@@ -203,16 +208,14 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         return file
     }
 
-    // Exercise 3 - FileProvider XML
 
-    // Exercise 4
     private fun dayUri(date: Date): Uri {
         val file = dayFile(date.year, date.month, date.day, date.hours, date.minutes, date.seconds)
         val uri = FileProvider.getUriForFile(requireContext(), "com.example.parcmarc.fileprovider", file)
         return uri
     }
 
-    // Exercise 5
+
     private fun takePictureFromCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val uri = dayUri(Date())
@@ -224,13 +227,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
         if (hasLocationPermissions) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    if (location != null) updateLocationHelper(location)
-                }
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         }
     }
 
@@ -249,7 +250,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         startActivityForResult(intent, REQUEST_GALLERY)
     }
 
-    // Exercise 7
+
     private fun copyUriToUri(from: Uri, to: Uri) {
         context?.contentResolver?.openInputStream(from).use { input ->
             context?.contentResolver?.openOutputStream(to).use { output ->
@@ -261,7 +262,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
 
-    // Exercise 8
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CAMERA -> {
