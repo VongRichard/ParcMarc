@@ -7,22 +7,15 @@
     android:foreground="?android:attr/selectableItemBackground">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/remaining"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/time_remaining"
-        app:layout_constraintTop_toTopOf="@+id/time_remaining" />
-
-    <TextView
         android:id="@+id/park_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:text="@string/default_park_name"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/time_remaining"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,12 +37,22 @@
 
     <TextView
         android:id="@+id/time_remaining"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="start"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:text="@string/default_time_remaining"
+        android:textAlignment="gravity"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/park_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 package com.example.parcmarc
 
-import android.graphics.BitmapFactory
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+
 
 class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, private val onParkListener: OnParkListener)
     : RecyclerView.Adapter<ParkAdapter.ParkViewHolder>() {
@@ -41,15 +42,11 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
 
     override fun onBindViewHolder(viewHolder: ParkViewHolder, position: Int) {
         viewHolder.textView.text = parksWithParkImages[position].park.toString()
-//        val timeLeft = parksWithParkImages[position].park.timeLeft()
-//        if (timeLeft == null) {
-//            val unlimited = "Unlimited"
-//            viewHolder.remainingTextView.text = unlimited
-//        } else {
-//            val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
-//            val timeLeftStr = "$hours:$minutes"
-//            viewHolder.remainingTextView.text = timeLeftStr
-//        }
+        viewHolder.textView.setSelected(true)
+        viewHolder.textView.movementMethod = ScrollingMovementMethod()
+
+        viewHolder.remainingTextView.text = parksWithParkImages[position].park.timeLeft()
+
         if (parksWithParkImages[position].images.isNotEmpty()) {
             val image = parksWithParkImages[position].images[0]
             viewHolder.imageView.setImageBitmap(utils.getRotatedBitmapFromFile(File(image.imageURI)))

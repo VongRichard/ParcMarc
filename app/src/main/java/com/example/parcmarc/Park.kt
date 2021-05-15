@@ -1,5 +1,6 @@
 package com.example.parcmarc
 
+import android.icu.math.BigDecimal
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,10 +8,6 @@ import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.parcelize.Parcelize
 import java.time.Duration
-import java.time.Duration.between
-import java.time.LocalDate
-import java.time.Period
-import java.time.ZoneId
 import java.util.*
 
 @Parcelize
@@ -24,11 +21,21 @@ class Park(
 
     override fun toString() = name
 
-//    fun timeLeft(): Duration? {
-//        if (endDate == null) {
-//            return null
-//        }
-//        val timeRemaining = endDate!!.time - Date().time
-//        return Duration.ofMillis(timeRemaining)
-//    }
+
+    fun timeLeft(): String {
+        if (endDate == null) {
+            return "Unlimited"
+        }
+        val timeRemaining = endDate!!.time - Date().time
+        val timeLeft =  Duration.ofMillis(timeRemaining)
+
+        return when {
+            (timeLeft.toMillis() < 0) -> "Duration exceeded"
+            (timeLeft.toMinutes() < 1L) -> "< a minute remaining"
+            else -> {
+                val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
+                "$hours:$minutes remaining"
+            }
+        }
+    }
 }
