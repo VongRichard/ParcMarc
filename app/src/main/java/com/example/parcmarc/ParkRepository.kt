@@ -2,6 +2,7 @@ package com.example.parcmarc
 
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class ParkRepository(private val parkDao: ParkDao,
                      private val parkImageDao: ParkImageDao) {
@@ -40,7 +41,11 @@ class ParkRepository(private val parkDao: ParkDao,
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun delete(parkImage: ParkImage) {
-        parkImageDao.delete(parkImage)
+    suspend fun delete(parkWithParkImages: ParkWithParkImages) {
+        for (parkImage in parkWithParkImages.images) {
+            File(parkImage.imageURI).delete()
+            parkDao.delete(parkImage)
+        }
+        parkDao.delete(parkWithParkImages.park)
     }
 }

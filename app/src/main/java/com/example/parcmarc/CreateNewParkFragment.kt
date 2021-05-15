@@ -62,10 +62,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         updateLocation()
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-//            viewModel.clearTempImages()
-//            viewModel.setDuration(Pair(0, 0))
-//            viewModel.setLocation(LatLng(0.0, 0.0))
-
             viewModel.clearCreateEditTemps()
         }
     }
@@ -120,13 +116,32 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
 
     private fun addImageView(image: File) {
+        val linearLayout = LinearLayout(context)
+        linearLayout.orientation = LinearLayout.VERTICAL
+        linearLayout.layoutParams = LinearLayout.LayoutParams(
+            intToSp(120), LinearLayout.LayoutParams.WRAP_CONTENT)
+
+
         val imageView = ImageView(context)
         imageView.setImageBitmap(utils.getRotatedBitmapFromFile(image))
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
             intToSp(120), intToSp(120))
         imageView.layoutParams = layoutParams
         imageView.tag = "${image.nameWithoutExtension}View"
-        imagesLayout.addView(imageView)
+        linearLayout.addView(imageView)
+
+        val imageButton = ImageButton(context)
+        imageButton.setImageResource(R.drawable.delete_icon_white)
+        imageButton.setOnClickListener {
+            viewModel.removeAndDeleteTempImage(image)
+            updateImageViews()
+        }
+        val imageButtonLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        imageButtonLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
+        imageButton.layoutParams = imageButtonLayoutParams
+        linearLayout.addView(imageButton)
+        imagesLayout.addView(linearLayout)
     }
 
 
@@ -147,9 +162,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         )
 
         viewModel.addPark(park, viewModel.tempImages.value!!)
-//        viewModel.clearTempImages()
-//        viewModel.setDuration(Pair(0, 0))
-//        viewModel.setLocation(LatLng(0.0, 0.0))
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }
@@ -203,16 +215,14 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         return file
     }
 
-    // Exercise 3 - FileProvider XML
 
-    // Exercise 4
     private fun dayUri(date: Date): Uri {
         val file = dayFile(date.year, date.month, date.day, date.hours, date.minutes, date.seconds)
         val uri = FileProvider.getUriForFile(requireContext(), "com.example.parcmarc.fileprovider", file)
         return uri
     }
 
-    // Exercise 5
+
     private fun takePictureFromCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val uri = dayUri(Date())
@@ -249,7 +259,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         startActivityForResult(intent, REQUEST_GALLERY)
     }
 
-    // Exercise 7
+
     private fun copyUriToUri(from: Uri, to: Uri) {
         context?.contentResolver?.openInputStream(from).use { input ->
             context?.contentResolver?.openOutputStream(to).use { output ->
@@ -261,7 +271,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     }
 
 
-    // Exercise 8
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CAMERA -> {

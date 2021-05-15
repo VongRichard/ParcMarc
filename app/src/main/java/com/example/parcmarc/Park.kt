@@ -24,11 +24,11 @@ class Park(
 
     override fun toString() = name
 
-    fun timeLeft(): Duration? {
-        if (endDate == null) {
-            return null
-        }
-        val timeRemaining = endDate!!.time - Date().time
-        return Duration.ofMillis(timeRemaining)
-    }
+//    fun timeLeft(): Duration? {
+//        if (endDate == null) {
+//            return null
+//        }
+//        val timeRemaining = endDate!!.time - Date().time
+//        return Duration.ofMillis(timeRemaining)
+//    }
 }

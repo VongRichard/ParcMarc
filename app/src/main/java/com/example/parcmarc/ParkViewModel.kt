@@ -31,6 +31,13 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _numTempImages.value = _tempImages.value!!.size
     }
 
+    fun removeAndDeleteTempImage(file: File) {
+        _tempImages.value?.remove(file)
+        file.delete()
+        _tempImages.notifyObserver()
+        _numTempImages.value = _tempImages.value!!.size
+    }
+
     // I think its safe to say nobody is going to leave their car parked in the middle of the ocean
     private var _tempLocation = MutableLiveData(LatLng(0.0,0.0))
 
@@ -69,8 +76,8 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         parkRepository.update(park)
     }
 
-    fun removePark(park: Park) = viewModelScope.launch {
-        parkRepository.delete(park)
+    fun removePark(parkWithParkImages: ParkWithParkImages) = viewModelScope.launch {
+        parkRepository.delete(parkWithParkImages)
     }
 
     fun <T> MutableLiveData<T>.notifyObserver() {

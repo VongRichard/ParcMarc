@@ -238,7 +238,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                     builder.setTitle("Are you sure you want to delete this Park?")
                     builder.apply {
                         setPositiveButton("Delete") { dialog, id ->
-                            viewModel.removePark(args.parkWithParkImages.park)
+                            viewModel.removePark(args.parkWithParkImages)
                             this@ParkFragment.findNavController().popBackStack();
                         }
                         setNegativeButton("Cancel") { dialog, id ->
