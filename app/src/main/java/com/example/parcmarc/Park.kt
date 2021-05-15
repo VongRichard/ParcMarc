@@ -34,7 +34,7 @@ class Park(
             (timeLeft.toMinutes() < 1L) -> "< a minute remaining"
             else -> {
                 val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
-                "$hours:$minutes remaining"
+                "${hours}h ${minutes}m remaining"
             }
         }
     }
