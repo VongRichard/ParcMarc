@@ -82,6 +82,7 @@ dependencies {
 
     def preference_version = "1.1.1"
 
-    // Kotlin
+    // Kotlin Jetpack preference dep
     implementation "androidx.preference:preference-ktx:$preference_version"
+
 }
