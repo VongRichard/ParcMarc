@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_allParksFragment_to_createNewParkLocation"
             app:destination="@id/createNewParkLocation" />
+        <action
+            android:id="@+id/action_allParksFragment_to_settingsFragment2"
+            app:destination="@id/settingsFragment2" />
     </fragment>
     <fragment
         android:id="@+id/parkFragment"
@@ -34,5 +37,5 @@
     <fragment
         android:id="@+id/settingsFragment2"
         android:name="com.example.parcmarc.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="Settings" />
 </navigation>
