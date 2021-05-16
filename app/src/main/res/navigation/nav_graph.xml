@@ -31,4 +31,8 @@
         android:name="com.example.parcmarc.CreateNewParkFragment"
         android:label="fragment_create_new_park_location"
         tools:layout="@layout/fragment_create_new_park" />
+    <fragment
+        android:id="@+id/settingsFragment2"
+        android:name="com.example.parcmarc.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>
