@@ -1,6 +1,7 @@
 package com.example.parcmarc
 
 import android.R.attr.delay
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -10,8 +11,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -45,8 +50,39 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val park: ParkWithParkImages = viewModel.parks.value!![position]
+                promptDeletePark(park)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+
         recyclerView.adapter = parkAdapter
         return view
+    }
+
+    private fun promptDeletePark(park: ParkWithParkImages) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setCancelable(false)
+        builder.setTitle("Are you sure you want to delete this Park?")
+        builder.apply {
+            setPositiveButton("Delete") { dialog, id ->
+                viewModel.removePark(park)
+            }
+            setNegativeButton("Cancel") { dialog, id ->
+            }
+        }
+        builder.show()
     }
 
     override fun onParkClick(position: Int) {
