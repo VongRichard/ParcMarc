@@ -124,7 +124,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settingsItem -> {
-                    //TODO Open the Settings Screen
+                    findNavController().navigate(R.id.action_allParksFragment_to_settingsFragment2)
                     true
                 }
                 else -> false
