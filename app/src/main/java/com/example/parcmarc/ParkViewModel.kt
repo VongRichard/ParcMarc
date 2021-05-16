@@ -80,10 +80,9 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         parkRepository.delete(parkWithParkImages)
     }
 
-    fun <T> MutableLiveData<T>.notifyObserver() {
+    private fun <T> MutableLiveData<T>.notifyObserver() {
         this.value = this.value
     }
-
 }
 
 class ParkViewModelFactory(private val repository: ParkRepository) : ViewModelProvider.Factory {

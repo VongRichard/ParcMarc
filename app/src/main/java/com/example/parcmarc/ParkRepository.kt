@@ -42,10 +42,14 @@ class ParkRepository(private val parkDao: ParkDao,
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun delete(parkWithParkImages: ParkWithParkImages) {
+        val files: MutableList<File> = mutableListOf()
         for (parkImage in parkWithParkImages.images) {
-            File(parkImage.imageURI).delete()
+            files.add(File(parkImage.imageURI))
             parkDao.delete(parkImage)
         }
         parkDao.delete(parkWithParkImages.park)
+        for (file in files) {
+            file.delete()
+        }
     }
 }
