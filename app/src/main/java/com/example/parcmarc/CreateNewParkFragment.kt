@@ -63,6 +63,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             viewModel.clearCreateEditTemps()
+            findNavController().popBackStack()
         }
     }
 
