@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -61,16 +62,26 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
                 val position = viewHolder.adapterPosition
                 val park: ParkWithParkImages = viewModel.parks.value!![position]
                 promptDeletePark(park, position)
-
             }
         }
 
-        //                 val bundle: Bundle = bundleOf("editMode" to true, "position" to position)
-        //                findNavController().navigate(R.id.action_chooserFragment_to_newQuizTopicFragment, bundle)
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
 
-        val itemTouchHelper = ItemTouchHelper(swipeDeleteHandler)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val park: ParkWithParkImages = viewModel.parks.value!![viewHolder.adapterPosition]
+                val action = AllParksFragmentDirections.actionAllParksFragmentToCreateNewParkLocation(park)
+                findNavController().navigate(action)
+            }
+        }
 
+        val itemTouchHelper1 = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchHelper1.attachToRecyclerView(recyclerView)
+
+        val itemTouchHelper2 = ItemTouchHelper(swipeEditHandler)
+        itemTouchHelper2.attachToRecyclerView(recyclerView)
 
         recyclerView.adapter = parkAdapter
         return view
