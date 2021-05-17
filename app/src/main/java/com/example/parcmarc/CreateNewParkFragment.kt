@@ -59,6 +59,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private val photoDirectory
         get() = File(context?.getExternalFilesDir(null), "parc")
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -68,6 +69,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             findNavController().popBackStack()
         }
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -116,6 +118,8 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
         return view
     }
+
+
     private fun updateImageViews() {
         imagesLayout.removeAllViews()
 
@@ -180,6 +184,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         findNavController().popBackStack()
     }
 
+
     private fun calculateEndTime(): Date? {
         var endTime: Date? = Date()
         val duration = viewModel.tempDuration.value!!
@@ -192,6 +197,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         return endTime
     }
 
+
     private fun updatePark() {
         var endTime: Date? = calculateEndTime()
         val tempPark = park!!.park
@@ -203,6 +209,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         findNavController().popBackStack()
     }
 
+
     private fun setFinalTime() {
         val fragment = TimePickerFragment()
         fragment.listener = this
@@ -212,6 +219,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         activity?.let { fragment.show(it.supportFragmentManager, null) }
     }
 
+
     private fun updateDurationHelper() {
         val tempDuration = viewModel.tempDuration.value!!
         var duration = "Unlimited"
@@ -220,6 +228,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
         timeLimitValue.text = duration
     }
+
 
     override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
         viewModel.setDuration(Pair(hour, minute))
@@ -270,6 +279,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             // display error state to the user
         }
     }
+
 
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
