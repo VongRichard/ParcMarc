@@ -9,19 +9,20 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.net.Uri
 import android.opengl.Visibility
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toolbar
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -280,7 +281,21 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(args.parkWithParkImages.park.location, 15F))
 
         map.setOnMapLongClickListener {
-            // TODO Open in Google Maps?
+            val vibrator = requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+
+            val uri = "geo:0,0?q=" + args.parkWithParkImages.park.location.latitude +
+                    "," + args.parkWithParkImages.park.location.longitude
+            val gmmIntentUri = Uri.parse(uri)
+
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            if (mapIntent.resolveActivity(requireActivity().packageManager) != null) {
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+            } else {
+                val toast = Toast.makeText(requireActivity().applicationContext,  context?.getString(R.string.no_google_maps), Toast.LENGTH_SHORT)
+                toast.show()
+            }
         }
 
         val mainActivity = activity as MainActivity

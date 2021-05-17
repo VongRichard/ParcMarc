@@ -85,7 +85,9 @@
         android:layout_height="match_parent"
         android:background="#70000000"
         android:visibility="invisible"
-        android:orientation="horizontal" />
+        android:orientation="horizontal" >
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -97,6 +99,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hold_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:text="@string/hold_text"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapView"
+        app:layout_constraintEnd_toEndOf="@+id/mapView" />
 
     <ImageView
         android:id="@+id/expanded_image"
