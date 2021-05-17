@@ -35,6 +35,19 @@ class ParkRepository(private val parkDao: ParkDao,
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
+    suspend fun update(park: Park, oldImages: List<ParkImage>, newFiles: List<File>) {
+        val newImages: MutableList<ParkImage> = mutableListOf()
+        for (nImage in newFiles) newImages.add(ParkImage(park.id, nImage.absolutePath))
+        for (oImage in oldImages) if (oImage !in newImages) {
+            parkImageDao.delete(oImage)
+            File(oImage.imageURI).delete()
+        }
+        for (nImage in newImages) if (nImage !in oldImages) parkImageDao.insert(nImage)
+        parkDao.update(park)
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
     suspend fun delete(park: Park) {
         parkDao.delete(park)
     }

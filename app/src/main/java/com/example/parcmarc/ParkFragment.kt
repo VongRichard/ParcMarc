@@ -24,6 +24,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -230,7 +231,10 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.editItem -> {
-                    //TODO Open the Edit Screen
+
+                    val action = ParkFragmentDirections.actionParkFragmentToCreateNewParkLocation(args.parkWithParkImages)
+                    findNavController().navigate(action)
+
                     true
                 }
                 R.id.deleteItem -> {

@@ -31,9 +31,24 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _numTempImages.value = _tempImages.value!!.size
     }
 
+    fun setTempImages(parkImages: List<ParkImage>) {
+        _tempImages.value?.clear()
+        for (parkImage in parkImages) {
+            _tempImages.value?.add(File(parkImage.imageURI))
+        }
+        _tempImages.notifyObserver()
+        _numTempImages.value = _tempImages.value!!.size
+    }
+
     fun removeAndDeleteTempImage(file: File) {
         _tempImages.value?.remove(file)
         file.delete()
+        _tempImages.notifyObserver()
+        _numTempImages.value = _tempImages.value!!.size
+    }
+
+    fun removeTempImage(file: File) {
+        _tempImages.value?.remove(file)
         _tempImages.notifyObserver()
         _numTempImages.value = _tempImages.value!!.size
     }
@@ -72,8 +87,8 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         }
     }
 
-    fun updatePark(park: Park) = viewModelScope.launch {
-        parkRepository.update(park)
+    fun updatePark(park: Park, oldImages: List<ParkImage>, newImages: List<File>) = viewModelScope.launch {
+        parkRepository.update(park, oldImages, newImages)
     }
 
     fun removePark(parkWithParkImages: ParkWithParkImages) = viewModelScope.launch {

@@ -31,12 +31,11 @@ class MainActivity : PermittedActivity() {
         requestPermissions(locationPermissions, 100, {
             promptForGPS()
         }, {
-            Toast.makeText(this, "GPS not permitted. You will not be able to unlock hiddenMessage messages.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "GPS not permitted. You will not be able to store park images.", Toast.LENGTH_LONG).show()
         })
 
         val storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(storagePermissions, 100, {
-//            promptForStorage()
         }, {
             Toast.makeText(this, "Unable to store photos.", Toast.LENGTH_LONG).show()
         })

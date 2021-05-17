@@ -1,6 +1,5 @@
 package com.example.parcmarc
 
-import android.icu.math.BigDecimal
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -23,19 +22,33 @@ class Park(
 
 
     fun timeLeft(): String {
-        if (endDate == null) {
-            return "Unlimited"
-        }
-        val timeRemaining = endDate!!.time - Date().time
-        val timeLeft =  Duration.ofMillis(timeRemaining)
-
-        return when {
-            (timeLeft.toMillis() < 0) -> "Duration exceeded"
-            (timeLeft.toMinutes() < 1L) -> "< a minute remaining"
-            else -> {
-                val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
-                "${hours}h ${minutes}m remaining"
+        val timeLeft = remainingDuration()
+        if (timeLeft != null) {
+            return when {
+                (timeLeft.toMillis() < 0) -> "Duration exceeded"
+                (timeLeft.toMinutes() < 1L) -> "< a minute remaining"
+                else -> {
+                    val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
+                    "${hours}h ${minutes}m remaining"
+                }
             }
         }
+        return "Unlimited"
+    }
+
+
+    fun updatePark(name: String, location: LatLng, endDate: Date?) {
+        this.name = name
+        this.location = location
+        this.endDate = endDate
+    }
+
+
+    fun remainingDuration(): Duration? {
+        if (endDate == null) {
+            return null
+        }
+        val timeRemaining = endDate!!.time - Date().time
+        return Duration.ofMillis(timeRemaining)
     }
 }

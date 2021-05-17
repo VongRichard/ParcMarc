@@ -13,4 +13,11 @@ class ParkImage(
         @ColumnInfo var imageURI: String
 ) : Parcelable {
     @PrimaryKey(autoGenerate = true) var id: Long = 0
+
+    override fun equals(other: Any?): Boolean {
+        if (other is ParkImage) {
+            return other.imageURI == this.imageURI
+        }
+        return false
+    }
 }

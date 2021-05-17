@@ -28,12 +28,20 @@
         <argument
             android:name="parkWithParkImages"
             app:argType="com.example.parcmarc.ParkWithParkImages" />
+        <action
+            android:id="@+id/action_parkFragment_to_createNewParkLocation"
+            app:destination="@id/createNewParkLocation" />
     </fragment>
     <fragment
         android:id="@+id/createNewParkLocation"
         android:name="com.example.parcmarc.CreateNewParkFragment"
         android:label="fragment_create_new_park_location"
-        tools:layout="@layout/fragment_create_new_park" />
+        tools:layout="@layout/fragment_create_new_park" >
+        <argument
+            android:name="parkWithParkImages"
+            app:argType="com.example.parcmarc.ParkWithParkImages"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment2"
         android:name="com.example.parcmarc.SettingsFragment"

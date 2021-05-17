@@ -46,7 +46,8 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         })
 
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
-            findNavController().navigate(R.id.action_allParksFragment_to_createNewParkLocation)
+            val action = AllParksFragmentDirections.actionAllParksFragmentToCreateNewParkLocation(null)
+            findNavController().navigate(action)
         }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
@@ -59,9 +60,13 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val park: ParkWithParkImages = viewModel.parks.value!![position]
-                promptDeletePark(park)
+                promptDeletePark(park, position)
+
             }
         }
+
+        //                 val bundle: Bundle = bundleOf("editMode" to true, "position" to position)
+        //                findNavController().navigate(R.id.action_chooserFragment_to_newQuizTopicFragment, bundle)
 
         val itemTouchHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -71,15 +76,18 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         return view
     }
 
-    private fun promptDeletePark(park: ParkWithParkImages) {
+    private fun promptDeletePark(park: ParkWithParkImages, position: Int) {
         val builder = AlertDialog.Builder(activity)
         builder.setCancelable(false)
         builder.setTitle("Are you sure you want to delete this Park?")
         builder.apply {
             setPositiveButton("Delete") { dialog, id ->
-                viewModel.removePark(park)
+                GlobalScope.launch {
+                    viewModel.removePark(park)
+                }
             }
             setNegativeButton("Cancel") { dialog, id ->
+                parkAdapter.notifyItemChanged(position)
             }
         }
         builder.show()
@@ -96,10 +104,6 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         runnable = Runnable {
             handler.postDelayed(runnable, DELAY)
             parkAdapter.notifyDataSetChanged()
-            Toast.makeText(
-                context, "This method is run every 30 seconds",
-                Toast.LENGTH_SHORT
-            ).show()
         }.also { runnable = it }
 
         handler.postDelayed(runnable, DELAY)

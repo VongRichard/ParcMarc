@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -25,6 +26,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -47,9 +49,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private lateinit var locationValue: TextView
     private lateinit var nameValue: EditText
     private lateinit var timeLimitValue: TextView
+    private val args: CreateNewParkFragmentArgs by navArgs()
     private lateinit var imagesLayout: LinearLayout
     private val utils: Utilities = Utilities()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var park: ParkWithParkImages? = null
 
 
     private val photoDirectory
@@ -58,8 +62,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-        updateLocation()
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             viewModel.clearCreateEditTemps()
@@ -79,14 +81,13 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
 
         view.findViewById<Button>(R.id.saveParkButton)?.setOnClickListener {
-            addNewPark()
+            if (args.parkWithParkImages == null) addNewPark() else updatePark()
+
         }
 
         view.findViewById<ImageButton>(R.id.updateLocationButton)?.setOnClickListener {
             updateLocation()
         }
-
-
 
         locationValue = view.findViewById(R.id.locationValue)
         nameValue = view.findViewById(R.id.editTextName)
@@ -96,6 +97,19 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         timeLimitValue.setOnClickListener {
             setFinalTime()
         }
+
+        if (args.parkWithParkImages != null && park == null) {
+            park = args.parkWithParkImages!!
+            viewModel.setTempImages(park!!.images)
+            updateLocationHelper(park!!.park.location)
+            val remainingDuration = park!!.park.remainingDuration()
+            nameValue.setText(park!!.park.name)
+            if (remainingDuration != null) {
+                viewModel.setDuration(Pair(remainingDuration.toHours().toInt(), (remainingDuration.toMinutes() - remainingDuration.toHours() * 60).toInt()))
+            } else {
+                viewModel.setDuration(Pair(0, 0))
+            }
+        } else if (park == null) updateLocation()
 
         updateImageViews()
         updateDurationHelper()
@@ -134,8 +148,14 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val imageButton = ImageButton(context)
         imageButton.setImageResource(R.drawable.delete_icon_white)
         imageButton.setOnClickListener {
-            viewModel.removeAndDeleteTempImage(image)
-            updateImageViews()
+            if (park == null || ParkImage(park!!.park.id, image.absolutePath) !in park!!.images) {
+                viewModel.removeAndDeleteTempImage(image)
+                updateImageViews()
+            } else {
+                viewModel.removeTempImage(image)
+                updateImageViews()
+            }
+
         }
         val imageButtonLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -147,14 +167,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
 
     private fun addNewPark() {
-        var endTime: Date? = Date()
-        val duration = viewModel.tempDuration.value!!
-        if (duration.first == duration.second && duration.second == 0) {
-            endTime = null
-        } else {
-            endTime!!.hours = endTime.hours + duration.first
-            endTime.minutes = endTime.minutes + duration.second
-        }
+        var endTime: Date? = calculateEndTime()
 
         val park = Park(
             nameValue.text.toString(),
@@ -163,6 +176,29 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         )
 
         viewModel.addPark(park, viewModel.tempImages.value!!)
+        viewModel.clearCreateEditTemps()
+        findNavController().popBackStack()
+    }
+
+    private fun calculateEndTime(): Date? {
+        var endTime: Date? = Date()
+        val duration = viewModel.tempDuration.value!!
+        if (duration.first == duration.second && duration.second == 0) {
+            endTime = null
+        } else {
+            endTime!!.hours = endTime.hours + duration.first
+            endTime.minutes = endTime.minutes + duration.second
+        }
+        return endTime
+    }
+
+    private fun updatePark() {
+        var endTime: Date? = calculateEndTime()
+        val tempPark = park!!.park
+        tempPark.updatePark(nameValue.text.toString(),
+            viewModel.tempLocation.value!!,
+            endTime)
+        viewModel.updatePark(tempPark, park!!.images, viewModel.tempImages.value!!)
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }
@@ -240,16 +276,19 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         if (hasLocationPermissions) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
-                    if (location != null) updateLocationHelper(location)
+                    if (location != null) {
+                        val loc = LatLng(location.latitude, location.longitude)
+                        updateLocationHelper(loc)
+                    }
                 }
         }
     }
 
 
-    private fun updateLocationHelper(location: Location) {
-        viewModel.setLocation(LatLng(location.latitude, location.longitude))
+    private fun updateLocationHelper(location: LatLng) {
+        viewModel.setLocation(location)
         val locationText = "${location.latitude}, ${location.longitude}"
-        locationValue!!.text = locationText
+        locationValue.text = locationText
     }
 
 
