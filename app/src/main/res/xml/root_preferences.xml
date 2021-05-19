@@ -4,17 +4,23 @@
         app:icon="@drawable/ic_baseline_notifications_24"
         app:title="Notifications">
 
-        <SeekBarPreference
-            app:defaultValue="50"
-            app:key="volume_nofitications"
-            app:showSeekBarValue="true"
-            app:title="Volume" />
-
         <SwitchPreference
             app:key="notifications"
             app:summaryOff="You will recieve all notifications"
             app:summaryOn="You will no longer recieve notifications"
             app:title="Disable notifications" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_baseline_notifications_24"
+        app:title="Dark Mode">
+
+        <SwitchPreference
+            app:key="darkmode"
+            app:summaryOff="Enable Dark Mode"
+            app:summaryOn="Disable Dark Mode"
+            app:title="Toggle Dark Mode" />
 
     </PreferenceCategory>
 
