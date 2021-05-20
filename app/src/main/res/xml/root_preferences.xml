@@ -1,18 +1,8 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        app:icon="@drawable/ic_baseline_notifications_24"
-        app:title="Dark Mode">
 
-        <SwitchPreference
-            app:key="darkmode"
-            app:summaryOff="Enable Dark Mode"
-            app:summaryOn="Disable Dark Mode"
-            app:title="Toggle Dark Mode" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="UI">
+    <PreferenceCategory app:title="Apperance"
+        app:icon="@drawable/ic_baseline_remove_red_eye_24">
 
         <ListPreference
             app:defaultValue="@string/dark_mode_def_value"
