@@ -3,6 +3,9 @@ package com.example.parcmarc
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -39,6 +42,9 @@ class MainActivity : PermittedActivity() {
         }, {
             Toast.makeText(this, "Unable to store photos.", Toast.LENGTH_LONG).show()
         })
+
+        createNotificationChannel()
+
     }
 
     private fun promptForGPS() {
@@ -53,6 +59,17 @@ class MainActivity : PermittedActivity() {
                 show()
             }
         }
+    }
+
+    // Create a notification channel to send a daily reminder to use the app.
+    private fun createNotificationChannel() {
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(Notification.CATEGORY_REMINDER, "Daily reminders", importance).apply {
+            description = "Send daily reminders use the app"
+        }
+        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
     }
 
 

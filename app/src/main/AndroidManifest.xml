@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.parcmarc.fileprovider"
