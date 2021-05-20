@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -42,6 +44,18 @@ class MainActivity : PermittedActivity() {
         }, {
             Toast.makeText(this, "Unable to store photos.", Toast.LENGTH_LONG).show()
         })
+
+        val darkModeValues = resources.getStringArray(R.array.dark_mode_values)
+        // The apps theme is decided depending upon the saved preferences on app startup
+        when (PreferenceManager.getDefaultSharedPreferences(this)
+            .getString(getString(R.string.dark_mode), getString(R.string.dark_mode_def_value))) {
+            darkModeValues[0] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            darkModeValues[1] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            darkModeValues[2] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            darkModeValues[3] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+        }
+
+
 
         createNotificationChannel()
 

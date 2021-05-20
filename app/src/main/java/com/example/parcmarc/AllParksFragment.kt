@@ -1,21 +1,18 @@
 package com.example.parcmarc
 
-import android.R.attr.delay
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -139,7 +136,9 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.settingsItem -> {
-                    findNavController().navigate(R.id.action_allParksFragment_to_settingsFragment2)
+//                    findNavController().navigate(R.id.action_allParksFragment_to_settingsFragment2)
+                    val intent = Intent(activity, SettingsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false

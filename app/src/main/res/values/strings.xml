@@ -38,4 +38,11 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="hold_text">Hold to go to full map</string>
     <string name="no_google_maps">Google Maps is not installed.</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+
+    <!-- Preference Titles -->
+    <string name="ui">UI</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
 </resources>
