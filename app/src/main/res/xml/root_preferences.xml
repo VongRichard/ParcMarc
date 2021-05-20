@@ -2,18 +2,6 @@
 
     <PreferenceCategory
         app:icon="@drawable/ic_baseline_notifications_24"
-        app:title="Notifications">
-
-        <SwitchPreference
-            app:key="notifications"
-            app:summaryOff="You will recieve all notifications"
-            app:summaryOn="You will no longer recieve notifications"
-            app:title="Disable notifications" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:icon="@drawable/ic_baseline_notifications_24"
         app:title="Dark Mode">
 
         <SwitchPreference
