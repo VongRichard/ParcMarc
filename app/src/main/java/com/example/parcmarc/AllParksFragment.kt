@@ -103,7 +103,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
 
     override fun onParkClick(position: Int) {
         val parkWithParkImages = viewModel.parks.value!![position]
-        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(parkWithParkImages)
+        val action = AllParksFragmentDirections.actionAllParksFragmentToParkFragment(position)
         val navigationController = this.findNavController()
         navigationController.navigate(action)
     }

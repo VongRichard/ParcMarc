@@ -39,7 +39,7 @@ private const val REQUEST_GALLERY = 111
 
 class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
-    private val viewModel: ParkViewModel by activityViewModels() {
+    private val viewModel: ParkViewModel by activityViewModels {
         ParkViewModelFactory((activity?.application as ParcMarcApplication).repository)
     }
 
@@ -54,6 +54,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private val utils: Utilities = Utilities()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var park: ParkWithParkImages? = null
+    private var oldURLs: MutableList<String> = mutableListOf()
 
 
     private val photoDirectory
@@ -103,6 +104,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         if (args.parkWithParkImages != null && park == null) {
             park = args.parkWithParkImages!!
             viewModel.setTempImages(park!!.images)
+            for (image in park!!.images) oldURLs.add(image.imageURI)
             updateLocationHelper(park!!.park.location)
             val remainingDuration = park!!.park.remainingDuration()
             nameValue.setText(park!!.park.name)
@@ -140,7 +142,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         linearLayout.layoutParams = LinearLayout.LayoutParams(
             intToSp(120), LinearLayout.LayoutParams.WRAP_CONTENT)
 
-
         val imageView = ImageView(context)
         imageView.setImageBitmap(utils.getRotatedBitmapFromFile(image))
         val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
@@ -152,7 +153,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val imageButton = ImageButton(context)
         imageButton.setImageResource(R.drawable.delete_icon_white)
         imageButton.setOnClickListener {
-            if (park == null || ParkImage(park!!.park.id, image.absolutePath) !in park!!.images) {
+            if (park == null || image.absolutePath !in oldURLs) {
                 viewModel.removeAndDeleteTempImage(image)
                 updateImageViews()
             } else {

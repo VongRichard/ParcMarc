@@ -46,6 +46,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     private var currentAnimator: Animator? = null
     private var shortAnimationDuration: Int = 0
     private val utils: Utilities = Utilities()
+    private lateinit var parkWithParkImages: ParkWithParkImages
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,13 +60,14 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        parkWithParkImages = viewModel.parks.value!![args.position]
+
         setUpToolbar(toolbar)
 
         val imageView1 = requireView().findViewById<ImageButton>(R.id.park_image_1)
         val imageView2 = requireView().findViewById<ImageButton>(R.id.park_image_2)
         val imageView3 = requireView().findViewById<ImageButton>(R.id.park_image_3)
-
-        images = args.parkWithParkImages.images
+        images = parkWithParkImages.images
         requireActivity().runOnUiThread {
             val imageViews = listOf(imageView1, imageView2, imageView3)
             for (i in 0..2) {
@@ -227,12 +229,12 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
 
     private fun setUpToolbar(toolbar: androidx.appcompat.widget.Toolbar) {
         toolbar.inflateMenu(R.menu.park_menu);
-        toolbar.title = args.parkWithParkImages.park.name
+        toolbar.title = parkWithParkImages.park.name
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.editItem -> {
 
-                    val action = ParkFragmentDirections.actionParkFragmentToCreateNewParkLocation(args.parkWithParkImages)
+                    val action = ParkFragmentDirections.actionParkFragmentToCreateNewParkLocation(parkWithParkImages)
                     findNavController().navigate(action)
 
                     true
@@ -243,7 +245,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                     builder.setTitle("Are you sure you want to delete this Park?")
                     builder.apply {
                         setPositiveButton("Delete") { dialog, id ->
-                            viewModel.removePark(args.parkWithParkImages)
+                            viewModel.removePark(parkWithParkImages)
                             this@ParkFragment.findNavController().popBackStack();
                         }
                         setNegativeButton("Cancel") { dialog, id ->
@@ -255,7 +257,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                 R.id.shareItem -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_SUBJECT, args.parkWithParkImages.park.name + " Location")
+                    intent.putExtra(Intent.EXTRA_SUBJECT, parkWithParkImages.park.name + " Location")
                     intent.putExtra(Intent.EXTRA_TEXT, generateShareBody())
                     startActivity(intent)
                     true
@@ -269,9 +271,9 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
      * Creates and returns a message body including a Google Maps link to the Park's location.
      */
     private fun generateShareBody(): String {
-        return "I've parked my car at these coordinates: " + args.parkWithParkImages.park.location.toString() +
-                "\n\n" + "Link:\n" + "https://maps.google.com/?q=" + args.parkWithParkImages.park.location.latitude +
-                "," + args.parkWithParkImages.park.location.longitude
+        return "I've parked my car at these coordinates: " + parkWithParkImages.park.location.toString() +
+                "\n\n" + "Link:\n" + "https://maps.google.com/?q=" + parkWithParkImages.park.location.latitude +
+                "," + parkWithParkImages.park.location.longitude
     }
 
     @SuppressLint("MissingPermission")
@@ -279,17 +281,17 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
         map.addMarker(
             MarkerOptions()
-                .position(args.parkWithParkImages.park.location)
+                .position(parkWithParkImages.park.location)
                 .title("Location")
         )
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(args.parkWithParkImages.park.location, 15F))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(parkWithParkImages.park.location, 15F))
 
         map.setOnMapLongClickListener {
             val vibrator = requireActivity().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
 
-            val uri = "geo:0,0?q=" + args.parkWithParkImages.park.location.latitude +
-                    "," + args.parkWithParkImages.park.location.longitude
+            val uri = "geo:0,0?q=" + parkWithParkImages.park.location.latitude +
+                    "," + parkWithParkImages.park.location.longitude
             val gmmIntentUri = Uri.parse(uri)
 
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
