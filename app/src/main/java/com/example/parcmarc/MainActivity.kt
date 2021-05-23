@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -75,40 +76,20 @@ class MainActivity : PermittedActivity() {
         }
     }
 
-    // Create a notification channel to send a daily reminder to use the app.
     private fun createNotificationChannel() {
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(Notification.CATEGORY_REMINDER, "Daily reminders", importance).apply {
-            description = "Send daily reminders use the app"
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(NotificationWorker.NOTIFICATION_CHANNEL, NotificationWorker.NOTIFICATION_NAME, importance).apply {
+                description = NotificationWorker.NOTIFICATION_WORK
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-
     }
 
-
-
-
-
-//    @SuppressLint("MissingPermission")
-//    private fun queryLocationForUnlock() {
-//        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//
-//        val listener = object : LocationListener {
-//            override fun onLocationChanged(location: Location) {
-//                // TODO Do something with the Location
-//
-//                locationManager.removeUpdates(this)
-//            }
-//
-//            override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {}
-//            override fun onProviderEnabled(provider: String) {}
-//            override fun onProviderDisabled(provider: String) {}
-//        }
-//
-//        if (hasLocationPermissions) {
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, listener)
-//        }
-//    }
 
 }

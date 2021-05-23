@@ -27,12 +27,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.room.OnConflictStrategy.REPLACE
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_ID
+import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_WORK
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 private const val REQUEST_CAMERA = 110
 private const val REQUEST_GALLERY = 111
@@ -172,7 +179,10 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
 
     private fun addNewPark() {
-        var endTime: Date? = calculateEndTime()
+        val endTime: Date? = calculateEndTime()
+        if (endTime != null) {
+            scheduleNotification(endTime.time - Date().time, nameValue.text.toString())
+        }
 
         val park = Park(
             nameValue.text.toString(),
@@ -200,7 +210,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
 
     private fun updatePark() {
-        var endTime: Date? = calculateEndTime()
+        val endTime: Date? = calculateEndTime()
+        if (endTime != null) {
+            scheduleNotification(endTime.time - Date().time, nameValue.text.toString())
+        }
+
         val tempPark = park!!.park
         tempPark.updatePark(nameValue.text.toString(),
             viewModel.tempLocation.value!!,
@@ -344,4 +358,16 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
+    private fun scheduleNotification(delay: Long, parkName: String) {
+        val data = Data.Builder()
+        data.putInt(NOTIFICATION_ID, 0)
+        data.putString("Park Name", parkName)
+
+        val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data.build()).build()
+
+//        val instanceWorkManager = WorkManager.getInstance(requireContext())
+//        instanceWorkManager.beginUniqueWork(NOTIFICATION_WORK, REPLACE, notificationWork).enqueue()
+        WorkManager.getInstance(requireContext()).enqueue(notificationWork)
+    }
 }

@@ -86,4 +86,6 @@ dependencies {
     // Kotlin Jetpack preference dep
     implementation "androidx.preference:preference-ktx:$preference_version"
 
+    def work_version = "2.5.0"
+    implementation("androidx.work:work-runtime-ktx:$work_version")
 }
