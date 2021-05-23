@@ -87,14 +87,14 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
     private fun promptDeletePark(park: ParkWithParkImages, position: Int) {
         val builder = AlertDialog.Builder(activity)
         builder.setCancelable(false)
-        builder.setTitle("Are you sure you want to delete this Park?")
+        builder.setTitle(R.string.delete_park_prompt)
         builder.apply {
-            setPositiveButton("Delete") { dialog, id ->
+            setPositiveButton(R.string.delete) { dialog, id ->
                 GlobalScope.launch {
                     viewModel.removePark(park)
                 }
             }
-            setNegativeButton("Cancel") { dialog, id ->
+            setNegativeButton(R.string.cancel) { dialog, id ->
                 parkAdapter.notifyItemChanged(position)
             }
         }

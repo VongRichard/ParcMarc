@@ -12,6 +12,7 @@ import android.graphics.*
 import android.net.Uri
 import android.opengl.Visibility
 import android.os.Bundle
+import android.os.Handler
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.fragment.app.Fragment
@@ -35,10 +36,16 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
+
+private const val DELAY = 30000L
+
+
 class ParkFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: ParkViewModel by activityViewModels() {
         ParkViewModelFactory((activity?.application as ParcMarcApplication).repository)
     }
+    private val handler: Handler = Handler()
+    private lateinit var runnable: Runnable
     private lateinit var map: GoogleMap
     private lateinit var mapView: MapView
     private var images: List<ParkImage> = listOf()
@@ -47,6 +54,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     private var shortAnimationDuration: Int = 0
     private val utils: Utilities = Utilities()
     private lateinit var parkWithParkImages: ParkWithParkImages
+    private var time_remaining_textview: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,6 +97,28 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         mapView = requireView().findViewById<MapView>(R.id.mapView)
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this)
+
+        time_remaining_textview = view.findViewById(R.id.park_time_remaining)
+        updateTimeRemaining()
+    }
+
+    override fun onResume() {
+        runnable = Runnable {
+            handler.postDelayed(runnable, DELAY)
+            if (time_remaining_textview != null) updateTimeRemaining()
+        }.also { runnable = it }
+
+        handler.postDelayed(runnable, DELAY)
+        super.onResume()
+    }
+
+    private fun updateTimeRemaining() {
+        time_remaining_textview!!.text = parkWithParkImages.park.timeLeft()
+    }
+
+    override fun onPause() {
+        handler.removeCallbacks(runnable)
+        super.onPause()
     }
 
     /**
@@ -242,13 +272,13 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                 R.id.deleteItem -> {
                     val builder = AlertDialog.Builder(activity)
                     builder.setCancelable(false)
-                    builder.setTitle("Are you sure you want to delete this Park?")
+                    builder.setTitle(R.string.delete_park_prompt)
                     builder.apply {
-                        setPositiveButton("Delete") { dialog, id ->
+                        setPositiveButton(R.string.delete) { dialog, id ->
                             viewModel.removePark(parkWithParkImages)
                             this@ParkFragment.findNavController().popBackStack();
                         }
-                        setNegativeButton("Cancel") { dialog, id ->
+                        setNegativeButton(R.string.cancel) { dialog, id ->
                         }
                     }
                     builder.show()
@@ -257,7 +287,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                 R.id.shareItem -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_SUBJECT, parkWithParkImages.park.name + " Location")
+                    intent.putExtra(Intent.EXTRA_SUBJECT, parkWithParkImages.park.name + R.string.location)
                     intent.putExtra(Intent.EXTRA_TEXT, generateShareBody())
                     startActivity(intent)
                     true
@@ -271,8 +301,8 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
      * Creates and returns a message body including a Google Maps link to the Park's location.
      */
     private fun generateShareBody(): String {
-        return "I've parked my car at these coordinates: " + parkWithParkImages.park.location.toString() +
-                "\n\n" + "Link:\n" + "https://maps.google.com/?q=" + parkWithParkImages.park.location.latitude +
+        return R.string.parked_car_at_coordinates.toString() + parkWithParkImages.park.location.toString() +
+                "\n\n" + R.string.link_colon.toString() + "\n" + "https://maps.google.com/?q=" + parkWithParkImages.park.location.latitude +
                 "," + parkWithParkImages.park.location.longitude
     }
 
@@ -282,7 +312,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         map.addMarker(
             MarkerOptions()
                 .position(parkWithParkImages.park.location)
-                .title("Location")
+                .title(R.string.location.toString())
         )
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(parkWithParkImages.park.location, 15F))
 

@@ -28,7 +28,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/location"
+                android:text="@string/location_colon"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@+id/locationValue"
                 app:layout_constraintStart_toStartOf="parent"

@@ -27,16 +27,6 @@
         app:layout_constraintBottom_toTopOf="@+id/park_image_2"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/remaining"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/park_time_remaining"
-        app:layout_constraintTop_toTopOf="@+id/park_time_remaining" />
-
     <ImageButton
         android:id="@+id/park_image_1"
         android:layout_width="120sp"

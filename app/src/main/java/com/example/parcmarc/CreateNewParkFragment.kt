@@ -237,11 +237,15 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun updateDurationHelper() {
         val tempDuration = viewModel.tempDuration.value!!
-        var duration = "Unlimited"
         if (!(tempDuration.first == tempDuration.second && tempDuration.second == 0)) {
-            duration = "${tempDuration.first} hour(s), ${tempDuration.second} minute(s)"
+            val duration = "${tempDuration.first} " +
+                    R.string.hour_s.toString() +
+                    ", ${tempDuration.second} " +
+                    R.string.minute_s.toString()
+            timeLimitValue.text = duration
+        } else {
+            timeLimitValue.setText(R.string.unlimited)
         }
-        timeLimitValue.text = duration
     }
 
 
@@ -254,12 +258,12 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun promptForAdd() {
         val builder = AlertDialog.Builder(requireContext()).apply {
-            setTitle("Choose source")
-            setMessage("Where is the photo?")
-            setPositiveButton("Camera") { _, _ ->
+            setTitle(R.string.choose_source)
+            setMessage(R.string.where_photo)
+            setPositiveButton(R.string.camera) { _, _ ->
                 takePictureFromCamera()
             }
-            setNegativeButton("Gallery") { _, _ ->
+            setNegativeButton(R.string.gallery) { _, _ ->
                 takePictureFromGallery()
             }
         }
@@ -361,7 +365,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private fun scheduleNotification(delay: Long, parkName: String) {
         val data = Data.Builder()
         data.putInt(NOTIFICATION_ID, 0)
-        data.putString("Park Name", parkName)
+        data.putString(R.string.default_park_name.toString(), parkName)
 
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data.build()).build()
