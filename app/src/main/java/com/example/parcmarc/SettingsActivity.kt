@@ -15,7 +15,8 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
-        this.title = "Settings";
+        this.title = "Settings"
+        supportActionBar?.setDisplayHomeAsUpEnabled(false);
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
@@ -24,6 +25,10 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)
+
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -40,6 +45,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             }
         }
     }
+
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
