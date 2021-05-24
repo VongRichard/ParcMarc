@@ -239,9 +239,9 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val tempDuration = viewModel.tempDuration.value!!
         if (!(tempDuration.first == tempDuration.second && tempDuration.second == 0)) {
             val duration = "${tempDuration.first} " +
-                    R.string.hour_s.toString() +
+                    getString(R.string.hour_s) +
                     ", ${tempDuration.second} " +
-                    R.string.minute_s.toString()
+                    getString(R.string.minute_s)
             timeLimitValue.text = duration
         } else {
             timeLimitValue.setText(R.string.unlimited)
@@ -365,7 +365,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private fun scheduleNotification(delay: Long, parkName: String) {
         val data = Data.Builder()
         data.putInt(NOTIFICATION_ID, 0)
-        data.putString(R.string.default_park_name.toString(), parkName)
+        data.putString(getString(R.string.default_park_name), parkName)
 
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data.build()).build()

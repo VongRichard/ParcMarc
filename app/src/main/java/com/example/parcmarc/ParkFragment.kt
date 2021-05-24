@@ -287,7 +287,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                 R.id.shareItem -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
-                    intent.putExtra(Intent.EXTRA_SUBJECT, parkWithParkImages.park.name + R.string.location)
+                    intent.putExtra(Intent.EXTRA_SUBJECT, parkWithParkImages.park.name + getString(R.string.location))
                     intent.putExtra(Intent.EXTRA_TEXT, generateShareBody())
                     startActivity(intent)
                     true
@@ -301,8 +301,8 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
      * Creates and returns a message body including a Google Maps link to the Park's location.
      */
     private fun generateShareBody(): String {
-        return R.string.parked_car_at_coordinates.toString() + parkWithParkImages.park.location.toString() +
-                "\n\n" + R.string.link_colon.toString() + "\n" + "https://maps.google.com/?q=" + parkWithParkImages.park.location.latitude +
+        return getString(R.string.parked_car_at_coordinates) + parkWithParkImages.park.location.toString() +
+                "\n\n" + getString(R.string.link_colon) + "\n" + "https://maps.google.com/?q=" + parkWithParkImages.park.location.latitude +
                 "," + parkWithParkImages.park.location.longitude
     }
 
@@ -312,7 +312,7 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
         map.addMarker(
             MarkerOptions()
                 .position(parkWithParkImages.park.location)
-                .title(R.string.location.toString())
+                .title(getString(R.string.location))
         )
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(parkWithParkImages.park.location, 15F))
 
