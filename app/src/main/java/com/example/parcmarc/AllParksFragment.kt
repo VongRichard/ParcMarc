@@ -38,7 +38,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_all_parks, container, false)
 
-        parkAdapter = ParkAdapter(listOf(),this)
+        parkAdapter = ParkAdapter(listOf(),this, requireContext())
         viewModel.parks.observe(viewLifecycleOwner, { newParksWithImages ->
             parkAdapter.setData(newParksWithImages)
         })

@@ -26,6 +26,15 @@
     <string name="parked_car_at_coordinates">I\'ve parked my car at these coordinates: </string>
     <string name="link_colon">Link:</string>
     <string name="empty_name">Name cannot be empty!</string>
+    <string name="no_gps">GPS not permitted. You will not be able to store park images.</string>
+    <string name="no_photos">Unable to store photos.</string>
+    <string name="gps_not_enabled">GPS is not enabled on your device. Enable it in the location settings.</string>
+    <string name="settings_button">Settings</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="expiry_message">Your park \'%1$s\' has expired!</string>
+    <string name="duration_exceeded">Duration exceeded</string>
+    <string name="minute_remaining">&lt; a minute remaining</string>
+    <string name="time_remaining">%1$dh %2$dm remaining</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

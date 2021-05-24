@@ -46,8 +46,8 @@ class NotificationWorker(appContext: Context, workerParams: WorkerParameters):
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        val titleNotification = "Parc Marc"
-        val subtitleNotification = "Your park '$parkName' has expired!"
+        val titleNotification = applicationContext.getString(R.string.app_name)
+        val subtitleNotification = applicationContext.getString(R.string.expiry_message, parkName)
         val pendingIntent = getActivity(applicationContext, 0, intent, 0)
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL)
             .setSmallIcon(R.drawable.ic_stat_name)

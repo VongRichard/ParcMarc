@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.Duration
 
 
 private const val DELAY = 30000L
@@ -113,7 +114,21 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun updateTimeRemaining() {
-        time_remaining_textview!!.text = parkWithParkImages.park.timeLeft()
+        time_remaining_textview!!.text = timeLeft(parkWithParkImages.park.remainingDuration())
+    }
+
+    fun timeLeft(timeLeft : Duration?): String {
+        if (timeLeft != null) {
+            return when {
+                (timeLeft.toMillis() < 0) -> requireContext().getString(R.string.duration_exceeded)
+                (timeLeft.toMinutes() < 1L) -> requireContext().getString(R.string.minute_remaining)
+                else -> {
+                    val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
+                    requireContext().getString(R.string.time_remaining, hours, minutes)
+                }
+            }
+        }
+        return requireContext().getString(R.string.unlimited)
     }
 
     override fun onPause() {

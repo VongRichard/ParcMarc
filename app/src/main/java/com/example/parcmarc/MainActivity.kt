@@ -37,13 +37,13 @@ class MainActivity : PermittedActivity() {
         requestPermissions(locationPermissions, 100, {
             promptForGPS()
         }, {
-            Toast.makeText(this, "GPS not permitted. You will not be able to store park images.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.no_gps), Toast.LENGTH_LONG).show()
         })
 
         val storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(storagePermissions, 100, {
         }, {
-            Toast.makeText(this, "Unable to store photos.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.no_photos), Toast.LENGTH_LONG).show()
         })
 
         val darkModeValues = resources.getStringArray(R.array.dark_mode_values)
@@ -66,11 +66,11 @@ class MainActivity : PermittedActivity() {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(this).apply {
-                setMessage("GPS is not enabled on your device. Enable it in the location settings.")
-                setPositiveButton("Settings") { _, _ ->
+                setMessage(getString(R.string.gps_not_enabled))
+                setPositiveButton(getString(R.string.settings_button)) { _, _ ->
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
-                setNegativeButton("Cancel") { _, _ -> }
+                setNegativeButton(getString(R.string.cancel_button)) { _, _ -> }
                 show()
             }
         }

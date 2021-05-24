@@ -1,16 +1,19 @@
 package com.example.parcmarc
 
+import android.content.Context
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
+import java.time.Duration
 
 
-class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, private val onParkListener: OnParkListener)
+class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, private val onParkListener: OnParkListener, private val context: Context)
     : RecyclerView.Adapter<ParkAdapter.ParkViewHolder>() {
 
     private val utils: Utilities = Utilities()
@@ -45,7 +48,7 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
         viewHolder.textView.setSelected(true)
         viewHolder.textView.movementMethod = ScrollingMovementMethod()
 
-        viewHolder.remainingTextView.text = parksWithParkImages[position].park.timeLeft()
+        viewHolder.remainingTextView.text = timeLeft(parksWithParkImages[position].park.remainingDuration())
 
         if (parksWithParkImages[position].images.isNotEmpty()) {
             val image = parksWithParkImages[position].images[0]
@@ -59,6 +62,20 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
     fun setData(newParks: List<ParkWithParkImages>) {
         parksWithParkImages = newParks
         notifyDataSetChanged()
+    }
+
+    fun timeLeft(timeLeft : Duration?): String {
+        if (timeLeft != null) {
+            return when {
+                (timeLeft.toMillis() < 0) -> context.getString(R.string.duration_exceeded)
+                (timeLeft.toMinutes() < 1L) -> context.getString(R.string.minute_remaining)
+                else -> {
+                    val hours = timeLeft.toHours(); val minutes = timeLeft.toMinutes() - hours*60
+                    context.getString(R.string.time_remaining, hours, minutes)
+                }
+            }
+        }
+        return context.getString(R.string.unlimited)
     }
 
 
