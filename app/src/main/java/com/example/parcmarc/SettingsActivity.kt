@@ -15,7 +15,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
-        this.title = "Settings"
+        this.title = getString(R.string.settings)
         supportActionBar?.setDisplayHomeAsUpEnabled(false);
         supportFragmentManager
             .beginTransaction()
@@ -61,5 +61,5 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     override fun provideSummary(preference: ListPreference?): CharSequence =
         if (preference?.key == getString(R.string.dark_mode)) preference.entry
-        else "Unknown Preference"
+        else getString(R.string.unknown_preference)
 }

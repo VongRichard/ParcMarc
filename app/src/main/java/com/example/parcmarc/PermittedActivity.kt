@@ -84,8 +84,8 @@ open class PermittedActivity : AppCompatActivity() {
 
     private fun promptForWriteSettings(requestId: Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage("This operation requires the ability to modify system settings. Please grant this permission on the next screen.")
-        builder.setPositiveButton("Okay") { _, _ ->
+        builder.setMessage(getString(R.string.write_settings))
+        builder.setPositiveButton(getString(R.string.okay)) { _, _ ->
             startActivityForResult(Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:$packageName")), requestId)
         }
         builder.show()

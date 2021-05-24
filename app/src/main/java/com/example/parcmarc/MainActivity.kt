@@ -67,7 +67,7 @@ class MainActivity : PermittedActivity() {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertDialog.Builder(this).apply {
                 setMessage(getString(R.string.gps_not_enabled))
-                setPositiveButton(getString(R.string.settings_button)) { _, _ ->
+                setPositiveButton(getString(R.string.settings)) { _, _ ->
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
                 setNegativeButton(getString(R.string.cancel_button)) { _, _ -> }
