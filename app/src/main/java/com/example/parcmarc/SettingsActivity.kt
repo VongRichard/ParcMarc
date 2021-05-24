@@ -15,6 +15,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+        this.title = "Settings";
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
