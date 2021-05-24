@@ -91,8 +91,12 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
 
         view.findViewById<Button>(R.id.saveParkButton)?.setOnClickListener {
-            if (args.parkWithParkImages == null) addNewPark() else updatePark()
-
+            if (nameValue.text.toString().trim() == "") {
+                val toast = Toast.makeText(requireActivity().applicationContext,  context?.getString(R.string.empty_name), Toast.LENGTH_SHORT)
+                toast.show()
+            } else {
+                if (args.parkWithParkImages == null) addNewPark() else updatePark()
+            }
         }
 
         view.findViewById<ImageButton>(R.id.updateLocationButton)?.setOnClickListener {

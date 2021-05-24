@@ -25,6 +25,7 @@
     <string name="save">Save</string>
     <string name="parked_car_at_coordinates">I\'ve parked my car at these coordinates: </string>
     <string name="link_colon">Link:</string>
+    <string name="empty_name">Name cannot be empty!</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
