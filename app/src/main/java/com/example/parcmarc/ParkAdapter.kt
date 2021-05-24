@@ -53,7 +53,7 @@ class ParkAdapter(private var parksWithParkImages: List<ParkWithParkImages>, pri
         if (parksWithParkImages[position].images.isNotEmpty()) {
             val image = parksWithParkImages[position].images[0]
             val file = File(image.imageURI)
-            if (file.exists()) viewHolder.imageView.setImageBitmap(utils.getRotatedBitmapFromFile(file))
+            if (file.exists()) viewHolder.imageView.setImageBitmap(utils.getRotatedBitmapFromFile(file, true))
         }
     }
 
