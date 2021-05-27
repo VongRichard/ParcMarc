@@ -62,12 +62,12 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _tempLocation.notifyObserver()
     }
 
-    private var _tempDuration: MutableLiveData<Pair<Int, Int>?> = MutableLiveData(null)
+    private var _tempDuration: MutableLiveData<Triple<Int, Int, Int>?> = MutableLiveData(null)
 
-    val tempDuration: LiveData<Pair<Int, Int>?>
+    val tempDuration: LiveData<Triple<Int, Int, Int>?>
         get() = _tempDuration
 
-    fun setDuration(duration: Pair<Int, Int>?) {
+    fun setDuration(duration: Triple<Int, Int, Int>?) {
         _tempDuration.value = duration
         _tempDuration.notifyObserver()
     }

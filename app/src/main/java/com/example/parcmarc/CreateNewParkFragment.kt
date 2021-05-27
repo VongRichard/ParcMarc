@@ -125,7 +125,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             val remainingDuration = park!!.park.remainingDuration()
             nameValue.setText(park!!.park.name)
             if (remainingDuration != null) {
-                viewModel.setDuration(Pair(remainingDuration.toHours().toInt(), (remainingDuration.toMinutes() - remainingDuration.toHours() * 60).toInt()))
+                val hour = remainingDuration.toHours().toInt();
+                val minute = (remainingDuration.toMinutes().toInt() - hour * 60)
+                val second = ((remainingDuration.toMillis() / 1000).toInt() - minute * 60 - hour * 60 * 60)
+                val triple: Triple<Int, Int, Int> = Triple(hour, minute, second)
+                viewModel.setDuration(triple)
             } else {
                 viewModel.setDuration(null)
             }
@@ -216,6 +220,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         } else {
             endTime!!.hours = endTime.hours + duration.first
             endTime.minutes = endTime.minutes + duration.second
+            endTime.seconds = endTime.seconds + duration.third
         }
         return endTime
     }
@@ -273,7 +278,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
 
     override fun onTimeSet(picker: TimePicker, hour: Int, minute: Int) {
-        viewModel.setDuration(Pair(hour, minute))
+        viewModel.setDuration(Triple(hour, minute, 0))
         updateDurationHelper()
 
     }
