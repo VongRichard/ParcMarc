@@ -2,8 +2,7 @@ package com.example.parcmarc
 
 import androidx.lifecycle.*
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.io.File
 
 class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
@@ -81,9 +80,12 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
     }
 
     fun addPark(park: Park, images: List<File>) = runBlocking {
-        val id: Long = parkRepository.insert(park)
-        for (image in images) {
-            parkRepository.insert(ParkImage(id, image.absolutePath))
+        withContext(Dispatchers.Default) {
+            val id: Long = parkRepository.insert(park)
+            for (image in images) {
+                parkRepository.insert(ParkImage(id, image.absolutePath))
+            }
+            id
         }
     }
 

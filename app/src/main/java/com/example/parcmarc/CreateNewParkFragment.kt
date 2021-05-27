@@ -25,17 +25,17 @@ import androidx.activity.addCallback
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_ID
 import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_WORK
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
 import java.util.*
@@ -184,9 +184,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun addNewPark() {
         val endTime: Date? = calculateEndTime()
-        if (endTime != null) {
-            scheduleNotification(endTime.time - Date().time, nameValue.text.toString())
-        }
 
         val park = Park(
             nameValue.text.toString(),
@@ -194,7 +191,12 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             endTime
         )
 
-        viewModel.addPark(park, viewModel.tempImages.value!!)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val id : Long = viewModel.addPark(park, viewModel.tempImages.value!!)
+            if (endTime != null) {
+                scheduleNotification(endTime.time - Date().time, park, id)
+            }
+        }
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
     }
@@ -215,14 +217,18 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun updatePark() {
         val endTime: Date? = calculateEndTime()
-        if (endTime != null) {
-            scheduleNotification(endTime.time - Date().time, nameValue.text.toString())
-        }
 
         val tempPark = park!!.park
         tempPark.updatePark(nameValue.text.toString(),
             viewModel.tempLocation.value!!,
             endTime)
+
+        println("wazzup")
+        if (endTime != null) {
+            println("bart")
+            scheduleNotification(endTime.time - Date().time, tempPark, tempPark.id)
+        }
+
         viewModel.updatePark(tempPark, park!!.images, viewModel.tempImages.value!!)
         viewModel.clearCreateEditTemps()
         findNavController().popBackStack()
@@ -366,16 +372,17 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         }
     }
 
-    private fun scheduleNotification(delay: Long, parkName: String) {
+    private fun scheduleNotification(delay: Long, park: Park, id: Long) {
         val data = Data.Builder()
         data.putInt(NOTIFICATION_ID, 0)
-        data.putString(getString(R.string.default_park_name), parkName)
+        data.putString(getString(R.string.default_park_name), park.name)
 
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data.build()).build()
 
-//        val instanceWorkManager = WorkManager.getInstance(requireContext())
-//        instanceWorkManager.beginUniqueWork(NOTIFICATION_WORK, REPLACE, notificationWork).enqueue()
-        WorkManager.getInstance(requireContext()).enqueue(notificationWork)
+        println(getString(R.string.app_name) + " " + id)
+        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+            getString(R.string.app_name) + " " + id,
+            ExistingWorkPolicy.REPLACE, notificationWork)
     }
 }

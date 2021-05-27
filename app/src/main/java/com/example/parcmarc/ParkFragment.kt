@@ -30,6 +30,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.work.WorkManager
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.GlobalScope
@@ -290,6 +291,8 @@ class ParkFragment : Fragment(), OnMapReadyCallback {
                     builder.setTitle(R.string.delete_park_prompt)
                     builder.apply {
                         setPositiveButton(R.string.delete) { dialog, id ->
+                            WorkManager.getInstance(requireContext()).cancelUniqueWork(
+                                getString(R.string.app_name) + " " + parkWithParkImages.park.id)
                             viewModel.removePark(parkWithParkImages)
                             this@ParkFragment.findNavController().popBackStack();
                         }
