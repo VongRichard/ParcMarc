@@ -75,8 +75,7 @@
     <string name="gallery">"Gallery"</string>
     <string name="hour_s">hour(s)</string>
     <string name="minute_s">minute(s)</string>
-
-
+    <string name="empty_string">No Parks found, create a Park to start!</string>
 
 
 </resources>

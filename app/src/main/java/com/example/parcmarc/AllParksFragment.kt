@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -37,18 +38,25 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_all_parks, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+        val emptyLayout: TextView = view.findViewById(R.id.empty_message)
 
         parkAdapter = ParkAdapter(listOf(),this, requireContext())
         viewModel.parks.observe(viewLifecycleOwner, { newParksWithImages ->
             parkAdapter.setData(newParksWithImages)
+            if (newParksWithImages.isEmpty()) {
+                recyclerView.visibility = View.GONE
+                emptyLayout.visibility = View.VISIBLE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+                emptyLayout.visibility = View.GONE
+            }
         })
 
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
             val action = AllParksFragmentDirections.actionAllParksFragmentToCreateNewParkLocation(null)
             findNavController().navigate(action)
         }
-
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
