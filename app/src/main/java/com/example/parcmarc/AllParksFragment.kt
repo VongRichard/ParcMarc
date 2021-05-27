@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.work.WorkManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.GlobalScope
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-private const val DELAY = 30000L
+private const val DELAY = 3000L
 
 
 class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
@@ -57,6 +58,14 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
         view.findViewById<FloatingActionButton>(R.id.newPark)?.setOnClickListener {
             val action = AllParksFragmentDirections.actionAllParksFragmentToCreateNewParkLocation(null)
             findNavController().navigate(action)
+        }
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        swipeRefreshLayout?.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+            parkAdapter.notifyDataSetChanged();
+            swipeRefreshLayout.isRefreshing = false
+
+
         }
 
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
@@ -122,7 +131,7 @@ class AllParksFragment : Fragment(), ParkAdapter.OnParkListener {
     override fun onResume() {
         runnable = Runnable {
             handler.postDelayed(runnable, DELAY)
-            parkAdapter.notifyDataSetChanged()
+//            parkAdapter.notifyDataSetChanged()
         }.also { runnable = it }
 
         handler.postDelayed(runnable, DELAY)

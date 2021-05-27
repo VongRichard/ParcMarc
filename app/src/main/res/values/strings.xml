@@ -68,6 +68,7 @@
     <string name="delete_park_prompt">"Are you sure you want to delete this Park?"</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="swipe_down_to_refresh">Swipe down to refresh</string>
 
     <!-- Create New Park Fragment -->
     <string name="choose_source">Choose source</string>

@@ -6,19 +6,12 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.text.Editable
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.addCallback
@@ -28,10 +21,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.room.OnConflictStrategy.REPLACE
 import androidx.work.*
 import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_ID
-import com.example.parcmarc.NotificationWorker.Companion.NOTIFICATION_WORK
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -40,6 +31,7 @@ import nz.ac.canterbury.seng440.backlog.TimePickerFragment
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.floor
 
 private const val REQUEST_CAMERA = 110
 private const val REQUEST_GALLERY = 111
@@ -125,9 +117,9 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             val remainingDuration = park!!.park.remainingDuration()
             nameValue.setText(park!!.park.name)
             if (remainingDuration != null) {
-                val hour = remainingDuration.toHours().toInt();
-                val minute = (remainingDuration.toMinutes().toInt() - hour * 60)
-                val second = ((remainingDuration.toMillis() / 1000).toInt() - minute * 60 - hour * 60 * 60)
+                val hour = floor(remainingDuration.toHours().toDouble()).toInt()
+                val minute = floor((remainingDuration.toMinutes().toDouble() - hour * 60)).toInt()
+                val second = floor((remainingDuration.toMillis() / 1000).toDouble() - minute * 60 - hour * 60 * 60).toInt()
                 val triple: Triple<Int, Int, Int> = Triple(hour, minute, second)
                 viewModel.setDuration(triple)
             } else {
