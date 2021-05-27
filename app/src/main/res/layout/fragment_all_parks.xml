@@ -27,7 +27,8 @@
         android:text="@string/empty_string"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allParksToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/allParksToolbar"
+        app:drawableTopCompat="@drawable/local_parking_icon" />
 
 
 
