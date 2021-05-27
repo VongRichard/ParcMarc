@@ -53,8 +53,7 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _numTempImages.value = _tempImages.value!!.size
     }
 
-    // I think its safe to say nobody is going to leave their car parked in the middle of the ocean
-    private var _tempLocation = MutableLiveData(LatLng(0.0,0.0))
+    private var _tempLocation = MutableLiveData(LatLng(-43.5214188,172.5838315))
 
     val tempLocation: LiveData<LatLng>
         get() = _tempLocation
