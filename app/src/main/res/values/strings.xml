@@ -21,9 +21,10 @@
     <string name="works_best_in_an_open_environment">Searching for GPS signal…</string>
     <string name="location_colon">Location:</string>
     <string name="location">Location</string>
+    <string name="location_share_title">%1$s Location</string>
     <string name="add_images_max_3">Add Images (max. 3)</string>
     <string name="save">Save</string>
-    <string name="parked_car_at_coordinates">I\'ve parked my car at these coordinates: </string>
+    <string name="parked_car_at_coordinates">I\'ve parked my car at these coordinates: \n%1$s\n\nLink:\nhttps://maps.google.com/?q=%2$s,%3$s</string>
     <string name="link_colon">Link:</string>
     <string name="empty_name">Name cannot be empty!</string>
     <string name="no_gps">GPS not permitted. You will not be able to store park images.</string>
