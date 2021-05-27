@@ -62,19 +62,19 @@ class ParkViewModel(private val parkRepository: ParkRepository): ViewModel() {
         _tempLocation.notifyObserver()
     }
 
-    private var _tempDuration = MutableLiveData(Pair(0, 0))
+    private var _tempDuration: MutableLiveData<Pair<Int, Int>?> = MutableLiveData(null)
 
-    val tempDuration: LiveData<Pair<Int, Int>>
+    val tempDuration: LiveData<Pair<Int, Int>?>
         get() = _tempDuration
 
-    fun setDuration(duration: Pair<Int, Int>) {
+    fun setDuration(duration: Pair<Int, Int>?) {
         _tempDuration.value = duration
         _tempDuration.notifyObserver()
     }
 
     fun clearCreateEditTemps() {
         clearTempImages()
-        setDuration(Pair(0, 0))
+        setDuration(null)
         setLocation(LatLng(0.0, 0.0))
     }
 

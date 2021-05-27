@@ -103,6 +103,11 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             updateLocation()
         }
 
+        view.findViewById<ImageButton>(R.id.resetDurationButton)?.setOnClickListener {
+            viewModel.setDuration(null)
+            updateDurationHelper()
+        }
+
         locationValue = view.findViewById(R.id.locationValue)
         nameValue = view.findViewById(R.id.editTextName)
         timeLimitValue = view.findViewById(R.id.timeLimitValue)
@@ -122,7 +127,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             if (remainingDuration != null) {
                 viewModel.setDuration(Pair(remainingDuration.toHours().toInt(), (remainingDuration.toMinutes() - remainingDuration.toHours() * 60).toInt()))
             } else {
-                viewModel.setDuration(Pair(0, 0))
+                viewModel.setDuration(null)
             }
         } else if (park == null) updateLocation()
 
@@ -204,8 +209,9 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
 
     private fun calculateEndTime(): Date? {
         var endTime: Date? = Date()
-        val duration = viewModel.tempDuration.value!!
-        if (duration.first == duration.second && duration.second == 0) {
+        val duration = viewModel.tempDuration.value
+
+        if (duration == null) {
             endTime = null
         } else {
             endTime!!.hours = endTime.hours + duration.first
@@ -238,16 +244,23 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
     private fun setFinalTime() {
         val fragment = TimePickerFragment()
         fragment.listener = this
-        val duration = viewModel.tempDuration.value!!
-        fragment.hour = duration.first
-        fragment.minute = duration.second
+        val duration = viewModel.tempDuration.value
+        if (duration != null) {
+            fragment.hour = duration.first
+            fragment.minute = duration.second
+        } else {
+            fragment.hour = 0
+            fragment.minute = 0
+        }
+
         activity?.let { fragment.show(it.supportFragmentManager, null) }
     }
 
 
     private fun updateDurationHelper() {
-        val tempDuration = viewModel.tempDuration.value!!
-        if (!(tempDuration.first == tempDuration.second && tempDuration.second == 0)) {
+        val tempDuration = viewModel.tempDuration.value
+
+        if (tempDuration != null) {
             val duration = "${tempDuration.first} " +
                     getString(R.string.hour_s) +
                     ", ${tempDuration.second} " +
