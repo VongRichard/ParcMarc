@@ -234,9 +234,7 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
             viewModel.tempLocation.value!!,
             endTime)
 
-        println("wazzup")
         if (endTime != null) {
-            println("bart")
             scheduleNotification(endTime.time - Date().time, tempPark, tempPark.id)
         }
 
@@ -398,7 +396,6 @@ class CreateNewParkFragment : Fragment(), TimePickerDialog.OnTimeSetListener {
         val notificationWork = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS).setInputData(data.build()).build()
 
-        println(getString(R.string.app_name) + " " + id)
         WorkManager.getInstance(requireContext()).enqueueUniqueWork(
             getString(R.string.app_name) + " " + id,
             ExistingWorkPolicy.REPLACE, notificationWork)
