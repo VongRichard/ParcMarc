@@ -61,7 +61,7 @@
 
     <!-- Preference Titles -->
     <string name="ui">UI</string>
-    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode">Appearance</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
 
     <!-- All Parks Fragment -->
