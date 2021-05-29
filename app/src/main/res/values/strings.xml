@@ -62,7 +62,7 @@
     <!-- Preference Titles -->
     <string name="ui">UI</string>
     <string name="dark_mode">Appearance</string>
-    <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
+    <string name="dark_mode_def_value">Light Mode</string>
 
     <!-- All Parks Fragment -->
     <string name="delete_park_prompt">"Are you sure you want to delete this Park?"</string>
